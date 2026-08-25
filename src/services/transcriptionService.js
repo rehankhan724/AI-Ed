@@ -3,31 +3,12 @@
  * Supports ANY uploaded video file using Web Audio VAD + Browser Speech Recognition
  */
 
-// Exact Khamzat Chimaev "Kill Everybody" speech subtitles
-export const KHAMZAT_VIDEO_SUBTITLES = [
-  { id: 'sub_kh_1', text: "I COME HERE FOR EVERYBODY!", start: 0.0, end: 1.5 },
-  { id: 'sub_kh_2', text: "KILL EVERYBODY!", start: 1.6, end: 3.0 },
-  { id: 'sub_kh_3', text: "IM THE CHAMP IM THE KING!", start: 3.1, end: 5.0 },
-  { id: 'sub_kh_4', text: "KILL EVERYBODY! AHHHHHH!", start: 5.1, end: 7.2 }
-];
-
-// Exact WhatsApp Video speech subtitles
-export const WHATSAPP_VIDEO_SUBTITLES = [
-  { id: 'sub_ws_1', text: "SCHOOLS DONT TEACH YOU ABOUT CRITICAL THINKING", start: 0.8, end: 4.5 },
-  { id: 'sub_ws_2', text: "SO CRITICAL THINKING ZARA BHI APPRECIATE NAHI KI JAATI SCHOOL MEIN", start: 4.6, end: 8.5 },
-  { id: 'sub_ws_3', text: "LIKE PURA SYSTEM HI AISE DESIGN HAI", start: 8.8, end: 11.2 },
-  { id: 'sub_ws_4', text: "KE YOU HAVE TO GENERATE PEOPLE JO BAS BOLE YES SIR YES MAM", start: 11.3, end: 15.5 },
-  { id: 'sub_ws_5', text: "ITS ABOUT GENERATING A GOOD SERVANT", start: 15.8, end: 19.5 },
-  { id: 'sub_ws_6', text: "BUT THE PROBLEM IS CRITICAL THINKING AGAR AAPKE ANDAR NAHI HAI", start: 19.8, end: 24.2 },
-  { id: 'sub_ws_7', text: "THEN YOU ARE NOT BECOME A GOOD PROBLEM SOLVER", start: 24.5, end: 28.0 },
-  { id: 'sub_ws_8', text: "AUR YEHI AAJ HAMARI SOCIETY FACE KAR RAHI HAI", start: 28.2, end: 31.5 },
-  { id: 'sub_ws_9', text: "HAMARE PAAS PROBLEM SOLVER KI KAMI HAI", start: 31.8, end: 35.0 },
-  { id: 'sub_ws_10', text: "WE DONT HAVE GOOD PROBLEM SOLVERS WE HAVE GOOD SERVANTS", start: 35.2, end: 38.5 },
-  { id: 'sub_ws_11', text: "AISE LOG BAHUT EASILY MIL JAATE HAIN JO YES SIR YES MAM KARKE ORDER FOLLOW KAREIN", start: 38.8, end: 43.0 },
-  { id: 'sub_ws_12', text: "BUT IF YOU GIVE THEM AN OUT OF THE BOX PROBLEM", start: 43.2, end: 48.5 },
-  { id: 'sub_ws_13', text: "THEN ITS HARD FOR THEM TO SOLVE THIS", start: 48.8, end: 52.0 },
-  { id: 'sub_ws_14', text: "KYUNKI UNKI CONDITIONING HI AISI HUI HAI", start: 52.2, end: 55.5 },
-  { id: 'sub_ws_15', text: "KE MASTER ORDER KARENGE AND THEN WE WILL DO THIS THING", start: 55.8, end: 59.0 }
+// Default demo speech subtitles
+export const DEMO_SAMPLE_SUBTITLES = [
+  { id: 'sub_demo_1', text: "WELCOME TO AI-ED VIDEO EDITOR", start: 0.8, end: 4.5 },
+  { id: 'sub_demo_2', text: "ITS NEVER BEEN EASIER TO CREATE AMAZING VIDEOS", start: 4.6, end: 8.5 },
+  { id: 'sub_demo_3', text: "CONVERT AUDIO TO TEXT AND AUTOMATICALLY GENERATE SUBTITLES", start: 8.8, end: 12.5 },
+  { id: 'sub_demo_4', text: "EDIT TIMELINE TRACKS WITH PRO PRECISION AND EXPORT IN HD", start: 12.8, end: 16.5 }
 ];
 
 /**
@@ -39,20 +20,7 @@ export const WHATSAPP_VIDEO_SUBTITLES = [
  */
 export async function transcribeVideoAudio(mediaElement, duration = 30, fileName = '') {
   return new Promise(async (resolve) => {
-    const cleanName = (fileName || '').toLowerCase();
-
-    // 1. Direct Known Video Matchers
-    if (cleanName.includes('khamzat') || cleanName.includes('chimaev') || cleanName.includes('kill')) {
-      setTimeout(() => resolve(KHAMZAT_VIDEO_SUBTITLES), 800);
-      return;
-    }
-
-    if (cleanName.includes('whatsapp') || cleanName.includes('12.26.03')) {
-      setTimeout(() => resolve(WHATSAPP_VIDEO_SUBTITLES), 800);
-      return;
-    }
-
-    // 2. Real-Time Web Speech Recognition Engine for ANY custom uploaded video
+    // 1. Real-Time Web Speech Recognition Engine for ANY custom uploaded video
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     let liveSpeechSubtitles = [];
 
@@ -101,7 +69,7 @@ export async function transcribeVideoAudio(mediaElement, duration = 30, fileName
       }
     }
 
-    // 3. Web Audio VAD & Energy Peak Segmentation for any video without metadata
+    // 2. Web Audio VAD & Energy Peak Segmentation for any video without metadata
     setTimeout(async () => {
       if (liveSpeechSubtitles.length > 0) return;
       const vadSubtitles = await analyzeAudioPeaksVAD(mediaElement, duration);

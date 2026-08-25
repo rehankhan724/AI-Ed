@@ -6,7 +6,7 @@ import PlaybackControls from './components/PlaybackControls';
 import Timeline from './components/Timeline';
 import SubtitleEditorPanel from './components/SubtitleEditorPanel';
 import RenderModal from './components/RenderModal';
-import { transcribeVideoAudio, WHATSAPP_VIDEO_SUBTITLES } from './services/transcriptionService';
+import { transcribeVideoAudio, DEMO_SAMPLE_SUBTITLES } from './services/transcriptionService';
 
 export default function App() {
   // Video & Playback state
@@ -43,9 +43,9 @@ export default function App() {
   useEffect(() => {
     const sampleUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
     setVideoSrc(sampleUrl);
-    setSubtitles(WHATSAPP_VIDEO_SUBTITLES);
-    if (WHATSAPP_VIDEO_SUBTITLES.length > 0) {
-      setSelectedSubId(WHATSAPP_VIDEO_SUBTITLES[0].id);
+    setSubtitles(DEMO_SAMPLE_SUBTITLES);
+    if (DEMO_SAMPLE_SUBTITLES.length > 0) {
+      setSelectedSubId(DEMO_SAMPLE_SUBTITLES[0].id);
     }
   }, []);
 
@@ -124,7 +124,7 @@ export default function App() {
       }
     } catch (err) {
       console.error("Transcription error:", err);
-      setSubtitles(WHATSAPP_VIDEO_SUBTITLES);
+      setSubtitles(DEMO_SAMPLE_SUBTITLES);
     } finally {
       setIsTranscribing(false);
     }
