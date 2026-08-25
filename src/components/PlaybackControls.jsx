@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Pause, Scissors, Trash2, ZoomIn, ZoomOut, Volume2, VolumeX, SkipBack, SkipForward, Sliders, RotateCcw, RotateCw } from 'lucide-react';
+import { Play, Pause, Scissors, Trash2, ZoomIn, ZoomOut, Volume2, Volume1, VolumeX, SkipBack, SkipForward, Sliders } from 'lucide-react';
 import { formatTimecode } from '../services/transcriptionService';
 
 export default function PlaybackControls({
@@ -20,7 +20,9 @@ export default function PlaybackControls({
   activeFilter,
   setActiveFilter,
   isMuted,
-  setIsMuted
+  setIsMuted,
+  volumeLevel = 1.0,
+  setVolumeLevel
 }) {
   // Step backward 1 frame (approx 0.04s for 25fps)
   const handleStepBack = () => {
@@ -31,6 +33,32 @@ export default function PlaybackControls({
   const handleStepForward = () => {
     setCurrentTime(Math.min(duration, currentTime + 0.04));
   };
+
+  // Handle Volume Change
+  const handleVolumeChange = (e) => {
+    const val = parseFloat(e.target.value);
+    if (setVolumeLevel) {
+      setVolumeLevel(val);
+    }
+    if (val === 0) {
+      setIsMuted(true);
+    } else if (isMuted) {
+      setIsMuted(false);
+    }
+  };
+
+  // Render Volume Icon based on level
+  const renderVolumeIcon = () => {
+    if (isMuted || volumeLevel === 0) {
+      return <VolumeX size={16} style={{ color: '#ef4444' }} />;
+    } else if (volumeLevel < 0.5) {
+      return <Volume1 size={16} style={{ color: '#38bdf8' }} />;
+    } else {
+      return <Volume2 size={16} style={{ color: '#38bdf8' }} />;
+    }
+  };
+
+  const currentVolPercent = isMuted ? 0 : Math.round(volumeLevel * 100);
 
   return (
     <div style={{
@@ -170,8 +198,8 @@ export default function PlaybackControls({
         </div>
       </div>
 
-      {/* Right tools: Speed, Aspect Ratio, Mute, Zoom slider */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+      {/* Right tools: Speed, Aspect Ratio, Volume Control, Zoom slider */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
         {/* Speed Dropdown */}
         <select
           value={playbackSpeed}
@@ -215,16 +243,45 @@ export default function PlaybackControls({
           <option value="4:5">4:5 Portrait</option>
         </select>
 
-        {/* Mute toggle */}
-        <button
-          onClick={() => setIsMuted(!isMuted)}
-          style={{ background: 'none', border: 'none', color: isMuted ? '#ef4444' : '#94a3b8', cursor: 'pointer' }}
-          title={isMuted ? 'Unmute' : 'Mute'}
-        >
-          {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-        </button>
+        {/* Dedicated Volume Control (Mute Toggle + Interactive Slider + % Badge) */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+          backgroundColor: '#0f172a',
+          padding: '3px 8px',
+          borderRadius: '6px',
+          border: '1px solid #1e293b'
+        }}>
+          <button
+            onClick={() => setIsMuted(!isMuted)}
+            style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', cursor: 'pointer', padding: 0 }}
+            title={isMuted ? 'Unmute' : 'Mute'}
+          >
+            {renderVolumeIcon()}
+          </button>
+          
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.05"
+            value={isMuted ? 0 : volumeLevel}
+            onChange={handleVolumeChange}
+            style={{
+              width: '65px',
+              height: '4px',
+              accentColor: '#38bdf8',
+              cursor: 'pointer'
+            }}
+            title={`Volume: ${currentVolPercent}%`}
+          />
+          <span style={{ fontSize: '10px', fontWeight: '700', color: isMuted ? '#ef4444' : '#38bdf8', minWidth: '30px' }}>
+            {currentVolPercent}%
+          </span>
+        </div>
 
-        {/* Zoom slider */}
+        {/* Timeline Zoom Slider */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <ZoomOut size={13} style={{ color: '#64748b' }} />
           <input
@@ -233,7 +290,8 @@ export default function PlaybackControls({
             max="200"
             value={zoomLevel}
             onChange={(e) => setZoomLevel(Number(e.target.value))}
-            style={{ width: '70px', cursor: 'pointer' }}
+            style={{ width: '60px', cursor: 'pointer', accentColor: '#3b82f6' }}
+            title="Timeline Zoom"
           />
           <ZoomIn size={13} style={{ color: '#64748b' }} />
         </div>

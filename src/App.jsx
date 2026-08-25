@@ -18,6 +18,7 @@ export default function App() {
   const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
   const [activeFilter, setActiveFilter] = useState('normal');
   const [isMuted, setIsMuted] = useState(false);
+  const [volumeLevel, setVolumeLevel] = useState(1.0);
 
   // Subtitle & Style state
   const [subtitles, setSubtitles] = useState([]);
@@ -49,13 +50,14 @@ export default function App() {
     }
   }, []);
 
-  // Sync playback speed & muted state to video element
+  // Sync playback speed, muted state & volume level to video element
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.playbackRate = playbackSpeed;
       videoRef.current.muted = isMuted;
+      videoRef.current.volume = Math.min(1, Math.max(0, volumeLevel));
     }
-  }, [playbackSpeed, isMuted]);
+  }, [playbackSpeed, isMuted, volumeLevel]);
 
   // Frame-accurate playhead tracking loop
   useEffect(() => {
@@ -262,6 +264,8 @@ export default function App() {
         setActiveFilter={setActiveFilter}
         isMuted={isMuted}
         setIsMuted={setIsMuted}
+        volumeLevel={volumeLevel}
+        setVolumeLevel={setVolumeLevel}
       />
 
       {/* Downside Multi-Track Timeline */}
