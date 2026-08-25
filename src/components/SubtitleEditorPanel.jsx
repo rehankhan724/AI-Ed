@@ -19,7 +19,8 @@ export default function SubtitleEditorPanel({
   captionSize,
   setCaptionSize,
   currentTime,
-  onAddSubtitleAtPlayhead
+  onAddSubtitleAtPlayhead,
+  onRemoveSilence
 }) {
   const selectedSub = subtitles.find(s => s.id === selectedSubId);
 
@@ -109,6 +110,30 @@ export default function SubtitleEditorPanel({
           >
             <Sparkles size={14} className={isTranscribing ? 'animate-spin' : ''} />
             {isTranscribing ? 'Extracting Speech...' : 'Extract AI Subtitles'}
+          </button>
+          
+          <button
+            onClick={onRemoveSilence}
+            style={{
+              width: '100%',
+              backgroundColor: 'rgba(245, 158, 11, 0.12)',
+              border: '1px solid rgba(245, 158, 11, 0.35)',
+              color: '#f59e0b',
+              borderRadius: '7px',
+              padding: '8px 12px',
+              fontWeight: '700',
+              fontSize: '11px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              marginTop: '8px',
+              transition: 'all 0.15s ease'
+            }}
+            title="Automatically prune dead silence gaps between subtitle clips"
+          >
+            <span>⚡ Auto Cut Silences & Jump-Cuts</span>
           </button>
         </div>
 

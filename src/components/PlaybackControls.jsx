@@ -22,7 +22,8 @@ export default function PlaybackControls({
   isMuted,
   setIsMuted,
   volumeLevel = 1.0,
-  setVolumeLevel
+  setVolumeLevel,
+  onRemoveSilence
 }) {
   // Step backward 1 frame (approx 0.04s for 25fps)
   const handleStepBack = () => {
@@ -117,6 +118,28 @@ export default function PlaybackControls({
         >
           <Trash2 size={14} />
           <span>Delete</span>
+        </button>
+
+        <button
+          onClick={onRemoveSilence}
+          style={{
+            backgroundColor: 'rgba(245, 158, 11, 0.15)',
+            border: '1px solid rgba(245, 158, 11, 0.4)',
+            color: '#f59e0b',
+            padding: '4px 10px',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '5px',
+            fontSize: '11px',
+            fontWeight: '700',
+            transition: 'all 0.15s ease'
+          }}
+          title="Auto cut dead silence & compress timeline into jump-cuts"
+        >
+          <span style={{ fontSize: '12px' }}>⚡</span>
+          <span>Cut Silences</span>
         </button>
 
         {/* Video Filter Preset dropdown */}

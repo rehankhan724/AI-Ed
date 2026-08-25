@@ -5,6 +5,7 @@ import VideoCanvas from './components/VideoCanvas';
 import PlaybackControls from './components/PlaybackControls';
 import Timeline from './components/Timeline';
 import SubtitleEditorPanel from './components/SubtitleEditorPanel';
+import AudioPanel from './components/AudioPanel';
 import RenderModal from './components/RenderModal';
 import { transcribeVideoAudio, DEMO_SAMPLE_SUBTITLES } from './services/transcriptionService';
 
@@ -19,6 +20,10 @@ export default function App() {
   const [activeFilter, setActiveFilter] = useState('normal');
   const [isMuted, setIsMuted] = useState(false);
   const [volumeLevel, setVolumeLevel] = useState(1.0);
+
+  // Background Music & Audio state
+  const [backgroundTrack, setBackgroundTrack] = useState('none');
+  const [bgMusicVolume, setBgMusicVolume] = useState(0.3);
 
   // Subtitle & Style state
   const [subtitles, setSubtitles] = useState([]);
@@ -334,6 +339,60 @@ export default function App() {
     setSelectedSubId(null);
   };
 
+  // AI Auto-Cut Silences & Jump-Cut Engine
+  const handleRemoveSilence = () => {
+    if (!subtitles || subtitles.length === 0) return;
+    const sorted = [...subtitles].sort((a, b) => a.start - b.start);
+    let cumulativeShift = 0;
+    const packedSubtitles = [];
+
+    sorted.forEach((sub, idx) => {
+      if (idx === 0) {
+        if (sub.start > 0.3) {
+          cumulativeShift = sub.start - 0.2;
+        }
+        packedSubtitles.push({
+          ...sub,
+          start: parseFloat(Math.max(0, sub.start - cumulativeShift).toFixed(2)),
+          end: parseFloat(Math.max(0.5, sub.end - cumulativeShift).toFixed(2))
+        });
+      } else {
+        const prevEnd = packedSubtitles[idx - 1].end;
+        const actualGap = sub.start - sorted[idx - 1].end;
+
+        if (actualGap > 0.3) {
+          cumulativeShift += (actualGap - 0.1);
+        }
+
+        const newStart = parseFloat(Math.max(prevEnd + 0.1, sub.start - cumulativeShift).toFixed(2));
+        const subDuration = sub.end - sub.start;
+        const newEnd = parseFloat((newStart + subDuration).toFixed(2));
+
+        packedSubtitles.push({
+          ...sub,
+          start: newStart,
+          end: newEnd
+        });
+      }
+    });
+
+    setSubtitles(packedSubtitles);
+  };
+
+  // AI Text-to-Speech (TTS) Voiceover Adder
+  const handleAddTTSVoiceover = (text) => {
+    const start = parseFloat(currentTime.toFixed(2));
+    const end = parseFloat((currentTime + Math.max(2.5, text.length * 0.12)).toFixed(2));
+    const newSub = {
+      id: `sub_tts_${Date.now()}`,
+      text: text.toUpperCase(),
+      start,
+      end
+    };
+    setSubtitles(prev => [...prev, newSub]);
+    setSelectedSubId(newSub.id);
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', backgroundColor: '#070a13' }}>
       
@@ -393,6 +452,18 @@ export default function App() {
             setCaptionSize={setCaptionSize}
             currentTime={currentTime}
             onAddSubtitleAtPlayhead={handleAddSubtitleAtPlayhead}
+            onRemoveSilence={handleRemoveSilence}
+          />
+        )}
+
+        {/* Audio & AI Voiceover (TTS) Panel */}
+        {activeTab === 'audio' && (
+          <AudioPanel
+            onAddTTSVoiceover={handleAddTTSVoiceover}
+            backgroundTrack={backgroundTrack}
+            setBackgroundTrack={setBackgroundTrack}
+            bgMusicVolume={bgMusicVolume}
+            setBgMusicVolume={setBgMusicVolume}
           />
         )}
 
@@ -430,6 +501,7 @@ export default function App() {
         setZoomLevel={setZoomLevel}
         onSplitAtPlayhead={handleSplitAtPlayhead}
         onDeleteSelected={handleDeleteSelected}
+        onRemoveSilence={handleRemoveSilence}
         selectedSubId={selectedSubId}
         playbackSpeed={playbackSpeed}
         setPlaybackSpeed={setPlaybackSpeed}
@@ -452,6 +524,7 @@ export default function App() {
         setSelectedSubId={setSelectedSubId}
         zoomLevel={zoomLevel}
         isPlaying={isPlaying}
+        backgroundTrack={backgroundTrack}
       />
 
       {/* Render & Export Modal */}

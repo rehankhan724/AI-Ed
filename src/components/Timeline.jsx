@@ -11,7 +11,8 @@ export default function Timeline({
   selectedSubId,
   setSelectedSubId,
   zoomLevel,
-  isPlaying
+  isPlaying,
+  backgroundTrack
 }) {
   const timelineRef = useRef(null);
   const [isDraggingPlayhead, setIsDraggingPlayhead] = useState(false);
@@ -166,7 +167,7 @@ export default function Timeline({
 
           {/* Track 1: Subtitles Track Header */}
           <div style={{
-            height: '48px',
+            height: '44px',
             borderBottom: '1px solid #1e293b',
             display: 'flex',
             alignItems: 'center',
@@ -182,7 +183,7 @@ export default function Timeline({
 
           {/* Track 2: Video Track Header */}
           <div style={{
-            height: '48px',
+            height: '44px',
             borderBottom: '1px solid #1e293b',
             display: 'flex',
             alignItems: 'center',
@@ -198,7 +199,7 @@ export default function Timeline({
 
           {/* Track 3: Audio Visualizer Track Header */}
           <div style={{
-            height: '48px',
+            height: '44px',
             borderBottom: '1px solid #1e293b',
             display: 'flex',
             alignItems: 'center',
@@ -210,6 +211,22 @@ export default function Timeline({
           }}>
             <Music size={15} />
             <span>Audio Wave</span>
+          </div>
+
+          {/* Track 4: Background Music Track Header */}
+          <div style={{
+            height: '44px',
+            borderBottom: '1px solid #1e293b',
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0 10px',
+            gap: '8px',
+            color: '#f59e0b',
+            fontSize: '11px',
+            fontWeight: '700'
+          }}>
+            <Volume2 size={15} />
+            <span>BG Music</span>
           </div>
         </div>
 
@@ -352,7 +369,7 @@ export default function Timeline({
 
             {/* Track 3: Audio Waveform Canvas (Pink block with animated canvas bars) */}
             <div style={{
-              height: '48px',
+              height: '44px',
               borderBottom: '1px solid #1e293b',
               position: 'relative',
               display: 'flex',
@@ -364,14 +381,51 @@ export default function Timeline({
                   position: 'absolute',
                   left: '0px',
                   width: `${duration * pxPerSec}px`,
-                  height: '34px',
+                  height: '30px',
                   display: 'flex',
                   alignItems: 'center',
                   padding: '0 8px',
                   overflow: 'hidden'
                 }}
               >
-                <AudioWaveformCanvas isPlaying={isPlaying} width={duration * pxPerSec} height={30} />
+                <AudioWaveformCanvas isPlaying={isPlaying} width={duration * pxPerSec} height={28} />
+              </div>
+            </div>
+
+            {/* Track 4: Background Music Track Canvas (Amber block) */}
+            <div style={{
+              height: '44px',
+              borderBottom: '1px solid #1e293b',
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center'
+            }}>
+              <div
+                style={{
+                  position: 'absolute',
+                  left: '0px',
+                  width: `${duration * pxPerSec}px`,
+                  height: '30px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '0 12px',
+                  borderRadius: '6px',
+                  background: backgroundTrack && backgroundTrack !== 'none'
+                    ? 'linear-gradient(135deg, #d97706 0%, #f59e0b 100%)'
+                    : 'rgba(255, 255, 255, 0.04)',
+                  border: backgroundTrack && backgroundTrack !== 'none'
+                    ? '1px solid #fbbf24'
+                    : '1px dashed rgba(255, 255, 255, 0.1)',
+                  color: backgroundTrack && backgroundTrack !== 'none' ? '#ffffff' : '#64748b',
+                  fontSize: '11px',
+                  fontWeight: '700'
+                }}
+              >
+                {backgroundTrack && backgroundTrack !== 'none' ? (
+                  <span>🎵 Active BG Music Track ({backgroundTrack.toUpperCase()})</span>
+                ) : (
+                  <span>+ Select Background Music in Audio Panel</span>
+                )}
               </div>
             </div>
 

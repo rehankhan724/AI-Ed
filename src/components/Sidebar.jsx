@@ -5,7 +5,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
   const menuItems = [
     { id: 'subtitles', label: 'Captions', icon: MessageSquareQuote, badge: 'AI' },
     { id: 'effects', label: 'Filters', icon: Sliders },
-    { id: 'audio', label: 'Audio', icon: Music },
+    { id: 'audio', label: 'Audio', icon: Music, badge: 'TTS' },
     { id: 'export', label: 'Export', icon: Download }
   ];
 

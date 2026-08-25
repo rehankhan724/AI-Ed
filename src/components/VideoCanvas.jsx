@@ -54,6 +54,23 @@ export default function VideoCanvas({
 
   const activeWordIdx = getActiveWordIndex();
 
+  // Detect key AI terms and return matching B-Roll Emoji
+  const getActiveEmoji = () => {
+    if (!activeSub || !activeSub.text) return null;
+    const text = activeSub.text.toUpperCase();
+    if (text.includes('KILL') || text.includes('EVERYBODY') || text.includes('FIRE') || text.includes('HOT')) return '🔥';
+    if (text.includes('CHAMP') || text.includes('KING') || text.includes('BEST') || text.includes('WIN')) return '👑';
+    if (text.includes('THINKING') || text.includes('CRITICAL') || text.includes('BRAIN') || text.includes('SCHOOL')) return '🧠';
+    if (text.includes('MONEY') || text.includes('CASH') || text.includes('RICH')) return '💰';
+    if (text.includes('LIGHTNING') || text.includes('SPEED') || text.includes('FAST') || text.includes('AI')) return '⚡';
+    if (text.includes('ROCKET') || text.includes('GROWTH') || text.includes('SUCCESS') || text.includes('GO')) return '🚀';
+    if (text.includes('SYSTEM') || text.includes('DESIGN') || text.includes('CODE')) return '⚙️';
+    if (text.includes('VIDEO') || text.includes('EDITOR') || text.includes('EDIT')) return '🎬';
+    return null;
+  };
+
+  const activeEmoji = getActiveEmoji();
+
   return (
     <div className="editor-grid-bg" style={{
       flex: 1,
@@ -161,18 +178,23 @@ export default function VideoCanvas({
           </div>
         )}
 
-        {/* Dynamic Kinetic Subtitle Overlay on Video Player */}
+        {/* Dynamic Kinetic Subtitle & AI B-Roll Emoji Overlay on Video Player */}
         {activeSub && activeSub.text && (
           <div style={{
             position: 'absolute',
             left: '50%',
             transform: 'translateX(-50%)',
-            top: captionPosition === 'top' ? '12%' : captionPosition === 'center' ? '45%' : '75%',
+            top: captionPosition === 'top' ? '10%' : captionPosition === 'center' ? '40%' : '72%',
             width: '90%',
             textAlign: 'center',
             pointerEvents: 'none',
             zIndex: 15
           }}>
+            {activeEmoji && (
+              <div className="emoji-broll-pop" key={`${activeSub.id}_${activeEmoji}`}>
+                {activeEmoji}
+              </div>
+            )}
             <div
               className={`caption-style-${activeCaptionStyle || 'hormozi'}`}
               style={{
