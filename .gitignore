@@ -12,6 +12,15 @@ dist
 dist-ssr
 *.local
 
+# Heavy Media files
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.mp3
+*.wav
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

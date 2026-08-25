@@ -6,13 +6,13 @@ import PlaybackControls from './components/PlaybackControls';
 import Timeline from './components/Timeline';
 import SubtitleEditorPanel from './components/SubtitleEditorPanel';
 import RenderModal from './components/RenderModal';
-import { transcribeVideoAudio, generateSmartSubtitles, WHATSAPP_VIDEO_SUBTITLES } from './services/transcriptionService';
+import { transcribeVideoAudio, WHATSAPP_VIDEO_SUBTITLES } from './services/transcriptionService';
 
 export default function App() {
   // Video & Playback state
   const [videoSrc, setVideoSrc] = useState(null);
-  const [currentFileName, setCurrentFileName] = useState('WhatsApp Video 2026-08-23 at 12.26.03 PM.mp4');
-  const [duration, setDuration] = useState(59.5);
+  const [currentFileName, setCurrentFileName] = useState('sample_video.mp4');
+  const [duration, setDuration] = useState(15);
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
@@ -28,9 +28,9 @@ export default function App() {
   const [captionColor, setCaptionColor] = useState('');
   const [captionSize, setCaptionSize] = useState(26);
 
-  // Studio UI state (9:16 aspect ratio for portrait WhatsApp video)
+  // Studio UI state
   const [activeTab, setActiveTab] = useState('subtitles');
-  const [aspectRatio, setAspectRatio] = useState('9:16');
+  const [aspectRatio, setAspectRatio] = useState('16:9');
   const [zoomLevel, setZoomLevel] = useState(100);
   const [isRenderModalOpen, setIsRenderModalOpen] = useState(false);
 
@@ -39,10 +39,10 @@ export default function App() {
   const fileInputRef = useRef(null);
   const animFrameRef = useRef(null);
 
-  // Load user's WhatsApp video as default video in studio
+  // Load online stock video as default lightweight media
   useEffect(() => {
-    const videoUrl = '/WhatsApp Video 2026-08-23 at 12.26.03 PM.mp4';
-    setVideoSrc(videoUrl);
+    const sampleUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
+    setVideoSrc(sampleUrl);
     setSubtitles(WHATSAPP_VIDEO_SUBTITLES);
     if (WHATSAPP_VIDEO_SUBTITLES.length > 0) {
       setSelectedSubId(WHATSAPP_VIDEO_SUBTITLES[0].id);
