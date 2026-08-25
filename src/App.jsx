@@ -83,9 +83,106 @@ export default function App() {
     } catch (e) {}
   }, [subtitles, activeCaptionStyle, captionFont, captionColor, activeFilter, aspectRatio]);
 
-  // 3. Global NLE Keyboard Shortcuts Engine (Space, Key S, Delete, Left/Right Arrows)
+  // 2b. Undo (Ctrl+Z) & Redo (Ctrl+Y) History Stack
+  const [history, setHistory] = useState([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+  const isUndoRedoAction = useRef(false);
+
+  useEffect(() => {
+    if (isUndoRedoAction.current) {
+      isUndoRedoAction.current = false;
+      return;
+    }
+
+    const snapshot = {
+      subtitles,
+      activeCaptionStyle,
+      captionFont,
+      captionColor,
+      captionPosition,
+      captionSize,
+      activeFilter,
+      aspectRatio
+    };
+
+    const serialized = JSON.stringify(snapshot);
+
+    setHistory(prevHistory => {
+      const currentHistory = prevHistory.slice(0, historyIndex + 1);
+      const lastSnapshot = currentHistory[currentHistory.length - 1];
+
+      if (lastSnapshot && JSON.stringify(lastSnapshot) === serialized) {
+        return prevHistory;
+      }
+
+      const newHistory = [...currentHistory, snapshot];
+      setHistoryIndex(newHistory.length - 1);
+      return newHistory;
+    });
+  }, [subtitles, activeCaptionStyle, captionFont, captionColor, captionPosition, captionSize, activeFilter, aspectRatio]);
+
+  const canUndo = historyIndex > 0;
+  const canRedo = historyIndex < history.length - 1;
+
+  const handleUndo = () => {
+    if (historyIndex > 0) {
+      const targetIndex = historyIndex - 1;
+      const snapshot = history[targetIndex];
+      if (snapshot) {
+        isUndoRedoAction.current = true;
+        setSubtitles(snapshot.subtitles);
+        setActiveCaptionStyle(snapshot.activeCaptionStyle);
+        setCaptionFont(snapshot.captionFont);
+        setCaptionColor(snapshot.captionColor);
+        setCaptionPosition(snapshot.captionPosition);
+        setCaptionSize(snapshot.captionSize);
+        setActiveFilter(snapshot.activeFilter);
+        setAspectRatio(snapshot.aspectRatio);
+        setHistoryIndex(targetIndex);
+      }
+    }
+  };
+
+  const handleRedo = () => {
+    if (historyIndex < history.length - 1) {
+      const targetIndex = historyIndex + 1;
+      const snapshot = history[targetIndex];
+      if (snapshot) {
+        isUndoRedoAction.current = true;
+        setSubtitles(snapshot.subtitles);
+        setActiveCaptionStyle(snapshot.activeCaptionStyle);
+        setCaptionFont(snapshot.captionFont);
+        setCaptionColor(snapshot.captionColor);
+        setCaptionPosition(snapshot.captionPosition);
+        setCaptionSize(snapshot.captionSize);
+        setActiveFilter(snapshot.activeFilter);
+        setAspectRatio(snapshot.aspectRatio);
+        setHistoryIndex(targetIndex);
+      }
+    }
+  };
+
+  // 3. Global NLE Keyboard Shortcuts Engine (Ctrl+Z, Ctrl+Y, Space, Key S, Delete, Left/Right Arrows)
   useEffect(() => {
     const handleKeyDown = (e) => {
+      // Catch Ctrl+Z / Cmd+Z (Undo / Redo)
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        if (e.shiftKey) {
+          handleRedo();
+        } else {
+          handleUndo();
+        }
+        return;
+      }
+
+      // Catch Ctrl+Y / Cmd+Y (Redo)
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
+        e.preventDefault();
+        handleRedo();
+        return;
+      }
+
       // Don't intercept shortcuts if typing in text inputs or textareas
       const tag = document.activeElement?.tagName?.toLowerCase();
       if (tag === 'input' || tag === 'textarea') return;
@@ -110,7 +207,7 @@ export default function App() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentTime, duration, selectedSubId, subtitles]);
+  }, [currentTime, duration, selectedSubId, subtitles, historyIndex, history]);
 
   // Sync playback speed, muted state & volume level to video element
   useEffect(() => {
@@ -256,6 +353,10 @@ export default function App() {
         onTranscribeClick={() => handleTranscribeAudio()}
         isTranscribing={isTranscribing}
         currentFileName={currentFileName}
+        onUndo={handleUndo}
+        onRedo={handleRedo}
+        canUndo={canUndo}
+        canRedo={canRedo}
       />
 
       {/* Main Studio Area */}

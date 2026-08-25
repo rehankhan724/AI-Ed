@@ -1,10 +1,10 @@
 /**
- * Universal High-Accuracy Speech-to-Subtitle Engine for AI-Ed
+ * Universal High-Accuracy Speech-to-Subtitle Engine for Ai-Editor
  * Transcribes real speech cadence and spoken audio into synchronized subtitle blocks
  */
 
 export const DEMO_SAMPLE_SUBTITLES = [
-  { id: 'sub_demo_1', text: "WELCOME TO AI-ED VIDEO EDITOR", start: 0.8, end: 4.5 },
+  { id: 'sub_demo_1', text: "WELCOME TO AI-EDITOR VIDEO EDITOR", start: 0.8, end: 4.5 },
   { id: 'sub_demo_2', text: "ITS NEVER BEEN EASIER TO CREATE AMAZING VIDEOS", start: 4.6, end: 8.5 },
   { id: 'sub_demo_3', text: "CONVERT AUDIO TO TEXT AND AUTOMATICALLY GENERATE SUBTITLES", start: 8.8, end: 12.5 },
   { id: 'sub_demo_4', text: "EDIT TIMELINE TRACKS WITH PRO PRECISION AND EXPORT IN HD", start: 12.8, end: 16.5 }

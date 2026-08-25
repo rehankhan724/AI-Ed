@@ -1,7 +1,17 @@
 import React from 'react';
 import { Video, Download, RotateCcw, RotateCw, Sparkles, Upload, FileText } from 'lucide-react';
 
-export default function Navbar({ onUploadClick, onRenderClick, onTranscribeClick, isTranscribing, currentFileName }) {
+export default function Navbar({
+  onUploadClick,
+  onRenderClick,
+  onTranscribeClick,
+  isTranscribing,
+  currentFileName,
+  onUndo,
+  onRedo,
+  canUndo,
+  canRedo
+}) {
   return (
     <header style={{
       height: '52px',
@@ -31,7 +41,7 @@ export default function Navbar({ onUploadClick, onRenderClick, onTranscribeClick
           AI
         </div>
         <span style={{ fontWeight: '800', fontSize: '18px', letterSpacing: '-0.5px' }}>
-          AI-Ed <span style={{ fontSize: '12px', color: '#94a3b8', fontWeight: '500' }}>Studio</span>
+          Ai-Editor <span style={{ fontSize: '12px', color: '#94a3b8', fontWeight: '500' }}>Studio</span>
         </span>
         <div style={{
           backgroundColor: '#1e293b',
@@ -98,10 +108,36 @@ export default function Navbar({ onUploadClick, onRenderClick, onTranscribeClick
       {/* Right section: Render / Export */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <div style={{ display: 'flex', gap: '4px', borderRight: '1px solid #334155', paddingRight: '10px' }}>
-          <button style={{ background: 'none', border: 'none', color: '#94a3b8', padding: '6px', cursor: 'pointer' }} title="Undo">
+          <button
+            onClick={onUndo}
+            disabled={!canUndo}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: canUndo ? '#38bdf8' : '#475569',
+              padding: '6px',
+              cursor: canUndo ? 'pointer' : 'not-allowed',
+              opacity: canUndo ? 1 : 0.4,
+              transition: 'all 0.15s ease'
+            }}
+            title="Undo Step (Ctrl+Z)"
+          >
             <RotateCcw size={16} />
           </button>
-          <button style={{ background: 'none', border: 'none', color: '#94a3b8', padding: '6px', cursor: 'pointer' }} title="Redo">
+          <button
+            onClick={onRedo}
+            disabled={!canRedo}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: canRedo ? '#38bdf8' : '#475569',
+              padding: '6px',
+              cursor: canRedo ? 'pointer' : 'not-allowed',
+              opacity: canRedo ? 1 : 0.4,
+              transition: 'all 0.15s ease'
+            }}
+            title="Redo Step (Ctrl+Y)"
+          >
             <RotateCw size={16} />
           </button>
         </div>
