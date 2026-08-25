@@ -26,7 +26,8 @@ export default function App() {
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [activeCaptionStyle, setActiveCaptionStyle] = useState('hormozi');
   const [captionPosition, setCaptionPosition] = useState('center');
-  const [captionColor, setCaptionColor] = useState('');
+  const [captionColor, setCaptionColor] = useState('#facc15');
+  const [captionFont, setCaptionFont] = useState('Montserrat');
   const [captionSize, setCaptionSize] = useState(26);
 
   // Studio UI state
@@ -40,15 +41,76 @@ export default function App() {
   const fileInputRef = useRef(null);
   const animFrameRef = useRef(null);
 
-  // Load online stock video as default lightweight media
+  // 1. Restore Project State from localStorage or load default stock video
   useEffect(() => {
+    try {
+      const saved = localStorage.getItem('aied_project_state');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.subtitles && parsed.subtitles.length > 0) {
+          setSubtitles(parsed.subtitles);
+        } else {
+          setSubtitles(DEMO_SAMPLE_SUBTITLES);
+        }
+        if (parsed.activeCaptionStyle) setActiveCaptionStyle(parsed.activeCaptionStyle);
+        if (parsed.captionFont) setCaptionFont(parsed.captionFont);
+        if (parsed.captionColor) setCaptionColor(parsed.captionColor);
+        if (parsed.activeFilter) setActiveFilter(parsed.activeFilter);
+        if (parsed.aspectRatio) setAspectRatio(parsed.aspectRatio);
+      } else {
+        setSubtitles(DEMO_SAMPLE_SUBTITLES);
+      }
+    } catch (e) {
+      setSubtitles(DEMO_SAMPLE_SUBTITLES);
+    }
+
     const sampleUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
     setVideoSrc(sampleUrl);
-    setSubtitles(DEMO_SAMPLE_SUBTITLES);
-    if (DEMO_SAMPLE_SUBTITLES.length > 0) {
-      setSelectedSubId(DEMO_SAMPLE_SUBTITLES[0].id);
-    }
   }, []);
+
+  // 2. Auto-Save Project State to localStorage
+  useEffect(() => {
+    try {
+      const stateToSave = {
+        subtitles,
+        activeCaptionStyle,
+        captionFont,
+        captionColor,
+        activeFilter,
+        aspectRatio
+      };
+      localStorage.setItem('aied_project_state', JSON.stringify(stateToSave));
+    } catch (e) {}
+  }, [subtitles, activeCaptionStyle, captionFont, captionColor, activeFilter, aspectRatio]);
+
+  // 3. Global NLE Keyboard Shortcuts Engine (Space, Key S, Delete, Left/Right Arrows)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Don't intercept shortcuts if typing in text inputs or textareas
+      const tag = document.activeElement?.tagName?.toLowerCase();
+      if (tag === 'input' || tag === 'textarea') return;
+
+      if (e.code === 'Space') {
+        e.preventDefault();
+        setIsPlaying(prev => !prev);
+      } else if (e.code === 'KeyS' || e.code === 'KeyK') {
+        e.preventDefault();
+        handleSplitAtPlayhead();
+      } else if (e.code === 'Delete' || e.code === 'Backspace') {
+        e.preventDefault();
+        handleDeleteSelected();
+      } else if (e.code === 'ArrowLeft') {
+        e.preventDefault();
+        handleSetCurrentTime(Math.max(0, currentTime - 0.04));
+      } else if (e.code === 'ArrowRight') {
+        e.preventDefault();
+        handleSetCurrentTime(Math.min(duration, currentTime + 0.04));
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentTime, duration, selectedSubId, subtitles]);
 
   // Sync playback speed, muted state & volume level to video element
   useEffect(() => {
@@ -106,6 +168,8 @@ export default function App() {
       setCurrentFileName(file.name);
       setIsPlaying(false);
       setCurrentTime(0);
+      setSubtitles([]);
+      setSelectedSubId(null);
       
       // Auto-trigger speech transcription for newly uploaded video
       setTimeout(() => {
@@ -198,8 +262,13 @@ export default function App() {
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         <Sidebar
           activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          onTranscribeClick={() => handleTranscribeAudio()}
+          setActiveTab={(tab) => {
+            if (tab === 'export') {
+              setIsRenderModalOpen(true);
+            } else {
+              setActiveTab(tab);
+            }
+          }}
         />
 
         {/* Subtitle & Caption Styling Panel */}
@@ -217,6 +286,8 @@ export default function App() {
             setCaptionPosition={setCaptionPosition}
             captionColor={captionColor}
             setCaptionColor={setCaptionColor}
+            captionFont={captionFont}
+            setCaptionFont={setCaptionFont}
             captionSize={captionSize}
             setCaptionSize={setCaptionSize}
             currentTime={currentTime}
@@ -233,6 +304,7 @@ export default function App() {
           activeCaptionStyle={activeCaptionStyle}
           captionPosition={captionPosition}
           captionColor={captionColor}
+          captionFont={captionFont}
           captionSize={captionSize}
           activeFilter={activeFilter}
           aspectRatio={aspectRatio}

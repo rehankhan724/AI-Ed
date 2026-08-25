@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Plus, Trash2, Edit3, AlignCenter, Type, Palette, Layout } from 'lucide-react';
+import { Sparkles, Plus, Trash2, Edit3, Type, Palette } from 'lucide-react';
 
 export default function SubtitleEditorPanel({
   subtitles,
@@ -14,6 +14,8 @@ export default function SubtitleEditorPanel({
   setCaptionPosition,
   captionColor,
   setCaptionColor,
+  captionFont = 'Montserrat',
+  setCaptionFont,
   captionSize,
   setCaptionSize,
   currentTime,
@@ -25,6 +27,23 @@ export default function SubtitleEditorPanel({
     if (!selectedSubId) return;
     setSubtitles(prev => prev.map(sub => sub.id === selectedSubId ? { ...sub, text } : sub));
   };
+
+  const highlightColors = [
+    { name: 'Neon Yellow', hex: '#facc15' },
+    { name: 'Electric Cyan', hex: '#06b6d4' },
+    { name: 'Hot Pink', hex: '#ec4899' },
+    { name: 'Emerald', hex: '#10b981' },
+    { name: 'Violet', hex: '#a855f7' },
+    { name: 'White', hex: '#ffffff' }
+  ];
+
+  const fonts = [
+    { id: 'Montserrat', name: 'Montserrat (Bold)' },
+    { id: 'Bebas Neue', name: 'Bebas Neue (Punchy)' },
+    { id: 'Outfit', name: 'Outfit (Modern)' },
+    { id: 'Inter', name: 'Inter (Clean)' },
+    { id: 'Space Grotesk', name: 'Space Grotesk' }
+  ];
 
   return (
     <div style={{
@@ -48,7 +67,7 @@ export default function SubtitleEditorPanel({
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '800' }}>
           <Sparkles size={16} style={{ color: '#8b5cf6' }} />
-          <span>AI Subtitles & Captions</span>
+          <span>AI Subtitles & Styling</span>
         </div>
       </div>
 
@@ -66,7 +85,7 @@ export default function SubtitleEditorPanel({
             <Sparkles size={14} /> Convert Audio to Subtitles
           </h4>
           <p style={{ fontSize: '11px', color: '#94a3b8', marginBottom: '12px', lineHeight: '1.4' }}>
-            Automatically extract speech spoken in video into frame-synced caption blocks.
+            Extract speech spoken in video into frame-synced caption blocks.
           </p>
           <button
             onClick={onTranscribeClick}
@@ -94,7 +113,7 @@ export default function SubtitleEditorPanel({
         </div>
 
         {/* Caption Style Presets */}
-        <div style={{ marginBottom: '20px' }}>
+        <div style={{ marginBottom: '18px' }}>
           <label style={{ fontSize: '11px', fontWeight: '800', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
             Viral Preset Styles
           </label>
@@ -128,6 +147,60 @@ export default function SubtitleEditorPanel({
           </div>
         </div>
 
+        {/* Typography & Font Picker */}
+        <div style={{ marginBottom: '18px' }}>
+          <label style={{ fontSize: '11px', fontWeight: '800', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Type size={12} /> Font Family
+          </label>
+          <select
+            value={captionFont}
+            onChange={(e) => setCaptionFont && setCaptionFont(e.target.value)}
+            style={{
+              width: '100%',
+              backgroundColor: '#0d1220',
+              color: '#38bdf8',
+              border: '1px solid #1e293b',
+              borderRadius: '6px',
+              padding: '6px 10px',
+              fontSize: '12px',
+              fontWeight: '700',
+              marginTop: '6px',
+              cursor: 'pointer'
+            }}
+          >
+            {fonts.map(f => (
+              <option key={f.id} value={f.id}>{f.name}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Custom Word Highlight Color */}
+        <div style={{ marginBottom: '18px' }}>
+          <label style={{ fontSize: '11px', fontWeight: '800', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Palette size={12} /> Active Word Highlight
+          </label>
+          <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+            {highlightColors.map(c => (
+              <button
+                key={c.hex}
+                onClick={() => setCaptionColor(c.hex)}
+                style={{
+                  width: '26px',
+                  height: '26px',
+                  borderRadius: '50%',
+                  backgroundColor: c.hex,
+                  border: captionColor === c.hex ? '2px solid #ffffff' : '1px solid rgba(255,255,255,0.2)',
+                  boxShadow: captionColor === c.hex ? `0 0 10px ${c.hex}` : 'none',
+                  cursor: 'pointer',
+                  transform: captionColor === c.hex ? 'scale(1.15)' : 'scale(1)',
+                  transition: 'all 0.15s ease'
+                }}
+                title={c.name}
+              />
+            ))}
+          </div>
+        </div>
+
         {/* Position & Size Adjuster */}
         <div style={{ marginBottom: '20px' }}>
           <label style={{ fontSize: '11px', fontWeight: '800', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
@@ -157,14 +230,14 @@ export default function SubtitleEditorPanel({
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px', color: '#94a3b8' }}>
-            <span>Font Size: {captionSize || 28}px</span>
+            <span>Font Size: {captionSize || 26}px</span>
             <input
               type="range"
               min="18"
               max="48"
-              value={captionSize || 28}
+              value={captionSize || 26}
               onChange={(e) => setCaptionSize(Number(e.target.value))}
-              style={{ width: '120px', cursor: 'pointer' }}
+              style={{ width: '120px', cursor: 'pointer', accentColor: '#38bdf8' }}
             />
           </div>
         </div>
@@ -230,7 +303,7 @@ export default function SubtitleEditorPanel({
               color: '#64748b',
               fontSize: '11px'
             }}>
-              Click any blue subtitle block on the timeline to edit its text.
+              Click any subtitle block on the timeline to edit text.
             </div>
           )}
         </div>

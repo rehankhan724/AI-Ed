@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react';
-import { Upload, Sparkles, Sliders, Play, Pause } from 'lucide-react';
+import React from 'react';
+import { Upload, Sparkles } from 'lucide-react';
 
 export default function VideoCanvas({
   videoSrc,
@@ -9,6 +9,7 @@ export default function VideoCanvas({
   activeCaptionStyle,
   captionPosition,
   captionColor,
+  captionFont = 'Montserrat',
   captionSize,
   activeFilter,
   aspectRatio,
@@ -175,8 +176,8 @@ export default function VideoCanvas({
             <div
               className={`caption-style-${activeCaptionStyle || 'hormozi'}`}
               style={{
-                fontSize: captionSize ? `${captionSize}px` : undefined,
-                color: captionColor || undefined
+                fontFamily: `'${captionFont || 'Montserrat'}', sans-serif`,
+                fontSize: captionSize ? `${captionSize}px` : undefined
               }}
             >
               {activeSub.text.split(' ').map((word, idx) => {
@@ -185,6 +186,7 @@ export default function VideoCanvas({
                   <span
                     key={idx}
                     className={`word-span ${isWordActive ? 'active' : ''}`}
+                    style={isWordActive && captionColor ? { color: captionColor, textShadow: `0 0 18px ${captionColor}` } : {}}
                   >
                     {word}
                   </span>
