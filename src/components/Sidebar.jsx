@@ -1,86 +1,177 @@
-import React from 'react';
-import { MessageSquareQuote, Image as ImageIcon, Sliders, Music, Download } from 'lucide-react';
+import React, { useRef, useState, useEffect } from 'react';
+import {
+  Video,
+  ShoppingBag,
+  Music,
+  Type,
+  GitCompare,
+  Sparkles,
+  Aperture,
+  Smile,
+  LayoutGrid,
+  ChevronLeft,
+  ChevronRight
+} from 'lucide-react';
 
 export default function Sidebar({ activeTab, setActiveTab }) {
+  const scrollContainerRef = useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
   const menuItems = [
-    { id: 'subtitles', label: 'Titles', icon: MessageSquareQuote, badge: 'AI', color: '#00d294' },
-    { id: 'media', label: 'Media', icon: ImageIcon, color: '#00d294' },
-    { id: 'effects', label: 'Effects', icon: Sliders, color: '#00d294' },
-    { id: 'audio', label: 'Audio', icon: Music, badge: 'TTS', color: '#00d294' },
-    { id: 'export', label: 'Export', icon: Download, color: '#00d294' }
+    { id: 'media', label: 'Media', icon: Video },
+    { id: 'stock_media', label: 'Stock', icon: ShoppingBag },
+    { id: 'audio', label: 'Audio', icon: Music, badge: 'TTS' },
+    { id: 'subtitles', label: 'Titles', icon: Type, badge: 'AI' },
+    { id: 'transitions', label: 'Transitions', icon: GitCompare },
+    { id: 'effects', label: 'Effects', icon: Sparkles },
+    { id: 'filters', label: 'Filters', icon: Aperture },
+    { id: 'stickers', label: 'Stickers', icon: Smile },
+    { id: 'templates', label: 'Templates', icon: LayoutGrid }
   ];
 
+  const checkScroll = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+      setCanScrollLeft(scrollLeft > 2);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 4);
+    }
+  };
+
+  useEffect(() => {
+    checkScroll();
+    window.addEventListener('resize', checkScroll);
+    return () => window.removeEventListener('resize', checkScroll);
+  }, []);
+
+  const handleScroll = (direction) => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = direction === 'left' ? -130 : 130;
+      scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      setTimeout(checkScroll, 250);
+    }
+  };
+
   return (
-    <aside style={{
-      width: '70px',
+    <div style={{
+      position: 'relative',
+      width: '100%',
       backgroundColor: '#111418',
-      borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+      borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
       display: 'flex',
-      flexDirection: 'column',
       alignItems: 'center',
-      padding: '14px 0',
-      zIndex: 20
+      userSelect: 'none',
+      height: '44px',
+      overflow: 'hidden'
     }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', alignItems: 'center' }}>
+      {/* Left Slider Arrow Button */}
+      {canScrollLeft && (
+        <button
+          onClick={() => handleScroll('left')}
+          className="btn-interactive"
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: '24px',
+            backgroundColor: 'rgba(17, 20, 24, 0.92)',
+            border: 'none',
+            color: '#00d294',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            zIndex: 25,
+            boxShadow: '4px 0 10px rgba(0,0,0,0.5)'
+          }}
+          title="Scroll Left"
+        >
+          <ChevronLeft size={15} />
+        </button>
+      )}
+
+      {/* Horizontal Scrollable Navigation Strip */}
+      <nav
+        ref={scrollContainerRef}
+        onScroll={checkScroll}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '4px',
+          overflowX: 'auto',
+          scrollBehavior: 'smooth',
+          padding: canScrollLeft ? '0 6px 0 26px' : canScrollRight ? '0 26px 0 6px' : '0 6px',
+          width: '100%',
+          height: '100%',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none'
+        }}
+      >
         {menuItems.map((item) => {
           const Icon = item.icon;
-          const isActive = activeTab === item.id;
+          const isCurrentActive =
+            activeTab === item.id ||
+            (activeTab === 'media' && (item.id === 'media' || item.id === 'stock_media' || item.id === 'transitions' || item.id === 'effects' || item.id === 'filters' || item.id === 'stickers' || item.id === 'templates')) ||
+            (activeTab === 'subtitles' && item.id === 'subtitles') ||
+            (activeTab === 'audio' && item.id === 'audio');
+
+          const handleClick = () => {
+            if (item.id === 'stock_media' || item.id === 'transitions' || item.id === 'filters' || item.id === 'stickers' || item.id === 'templates') {
+              setActiveTab('media');
+            } else {
+              setActiveTab(item.id);
+            }
+          };
+
           return (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={handleClick}
               className="btn-interactive"
               style={{
-                width: '54px',
-                height: '52px',
-                borderRadius: '8px',
-                backgroundColor: isActive ? 'rgba(0, 210, 148, 0.14)' : 'transparent',
-                color: isActive ? '#00d294' : '#8a99ad',
-                border: isActive ? '1px solid rgba(0, 210, 148, 0.4)' : '1px solid transparent',
-                boxShadow: isActive ? '0 2px 10px rgba(0, 210, 148, 0.2)' : 'none',
+                background: 'none',
                 display: 'flex',
-                flexDirection: 'column',
                 alignItems: 'center',
-                justifyContent: 'center',
-                gap: '3px',
+                gap: '5px',
                 cursor: 'pointer',
-                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                position: 'relative'
+                padding: '4px 7px',
+                borderRadius: '6px',
+                position: 'relative',
+                backgroundColor: isCurrentActive ? 'rgba(0, 210, 148, 0.14)' : 'transparent',
+                border: isCurrentActive ? '1px solid rgba(0, 210, 148, 0.3)' : '1px solid transparent',
+                transition: 'all 0.15s ease',
+                flexShrink: 0
               }}
               title={item.label}
             >
-              {/* Active Indicator Bar on Left Edge */}
-              {isActive && (
-                <div style={{
-                  position: 'absolute',
-                  left: '-8px',
-                  top: '10px',
-                  bottom: '10px',
-                  width: '3px',
-                  borderRadius: '0 3px 3px 0',
-                  backgroundColor: '#00d294',
-                  boxShadow: '0 0 10px #00d294'
-                }} />
-              )}
+              <Icon
+                size={14}
+                style={{
+                  color: isCurrentActive ? '#00d294' : '#94a3b8',
+                  transition: 'color 0.15s ease'
+                }}
+              />
 
-              <Icon size={19} style={{ filter: isActive ? 'drop-shadow(0 2px 6px rgba(0, 210, 148, 0.6))' : 'none' }} />
-              <span style={{ fontSize: '9.5px', fontWeight: '700', letterSpacing: '0.2px' }}>{item.label}</span>
+              <span style={{
+                fontSize: '10.5px',
+                fontWeight: '700',
+                color: isCurrentActive ? '#00d294' : '#94a3b8',
+                letterSpacing: '-0.1px',
+                whiteSpace: 'nowrap'
+              }}>
+                {item.label}
+              </span>
 
               {item.badge && (
                 <span style={{
-                  position: 'absolute',
-                  top: '3px',
-                  right: '3px',
-                  background: item.id === 'subtitles' 
-                    ? 'linear-gradient(135deg, #00d294 0%, #00b37e 100%)' 
-                    : 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-                  color: item.id === 'subtitles' ? '#08121a' : '#ffffff',
-                  fontSize: '7.5px',
+                  background: item.badge === 'AI' ? '#00d294' : '#3b82f6',
+                  color: item.badge === 'AI' ? '#08121a' : '#ffffff',
+                  fontSize: '7px',
                   fontWeight: '900',
-                  padding: '1px 4px',
+                  padding: '1px 3px',
                   borderRadius: '3px',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-                  letterSpacing: '0.4px'
+                  marginLeft: '1px'
                 }}>
                   {item.badge}
                 </span>
@@ -88,7 +179,34 @@ export default function Sidebar({ activeTab, setActiveTab }) {
             </button>
           );
         })}
-      </div>
-    </aside>
+      </nav>
+
+      {/* Right Slider Arrow Button */}
+      {canScrollRight && (
+        <button
+          onClick={() => handleScroll('right')}
+          className="btn-interactive"
+          style={{
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: '24px',
+            backgroundColor: 'rgba(17, 20, 24, 0.92)',
+            border: 'none',
+            color: '#00d294',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            zIndex: 25,
+            boxShadow: '-4px 0 10px rgba(0,0,0,0.5)'
+          }}
+          title="Scroll Right"
+        >
+          <ChevronRight size={15} />
+        </button>
+      )}
+    </div>
   );
 }
