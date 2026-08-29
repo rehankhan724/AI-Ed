@@ -215,10 +215,12 @@ export default function App() {
         handleDeleteSelected();
       } else if (e.code === 'ArrowLeft') {
         e.preventDefault();
-        handleSetCurrentTime(Math.max(0, currentTime - 0.04));
+        const step = e.shiftKey ? 1.0 : 0.05;
+        handleSetCurrentTime(Math.max(0, currentTime - step));
       } else if (e.code === 'ArrowRight') {
         e.preventDefault();
-        handleSetCurrentTime(Math.min(duration, currentTime + 0.04));
+        const step = e.shiftKey ? 1.0 : 0.05;
+        handleSetCurrentTime(Math.min(duration, currentTime + step));
       }
     };
 
@@ -447,67 +449,84 @@ export default function App() {
         setThemeMode={setThemeMode}
       />
 
-      {/* Main Studio Area */}
+      {/* Main Studio Workspace */}
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-        <Sidebar
-          activeTab={activeTab}
-          setActiveTab={(tab) => {
-            if (tab === 'export') {
-              setIsRenderModalOpen(true);
-            } else {
-              setActiveTab(tab);
-            }
-          }}
-        />
-
-        {/* Subtitle & Caption Styling Panel */}
-        {activeTab === 'subtitles' && (
-          <SubtitleEditorPanel
-            subtitles={subtitles}
-            setSubtitles={setSubtitles}
-            selectedSubId={selectedSubId}
-            setSelectedSubId={setSelectedSubId}
-            onTranscribeClick={() => handleTranscribeAudio()}
-            isTranscribing={isTranscribing}
-            activeCaptionStyle={activeCaptionStyle}
-            setActiveCaptionStyle={setActiveCaptionStyle}
-            captionPosition={captionPosition}
-            setCaptionPosition={setCaptionPosition}
-            captionColor={captionColor}
-            setCaptionColor={setCaptionColor}
-            captionFont={captionFont}
-            setCaptionFont={setCaptionFont}
-            captionSize={captionSize}
-            setCaptionSize={setCaptionSize}
-            onAddSubtitleAtPlayhead={handleAddSubtitleAtPlayhead}
-            onRemoveSilence={handleRemoveSilence}
+        
+        {/* Left Side Studio Panel (Navigation Tabs + Active Panel) */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '360px',
+          backgroundColor: '#12151a',
+          borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+          shrink: 0,
+          overflow: 'hidden'
+        }}>
+          {/* Filmora Navigation Header Tab Strip */}
+          <Sidebar
+            activeTab={activeTab}
+            setActiveTab={(tab) => {
+              if (tab === 'export') {
+                setIsRenderModalOpen(true);
+              } else {
+                setActiveTab(tab);
+              }
+            }}
           />
-        )}
 
-        {/* Stock Media & Image Search Panel */}
-        {activeTab === 'media' && (
-          <MediaPanel
-            aspectRatio={aspectRatio}
-            currentTime={currentTime}
-            overlayImages={overlayImages}
-            selectedImageId={selectedImageId}
-            setSelectedImageId={setSelectedImageId}
-            onAddOverlayImage={handleAddOverlayImage}
-            onUpdateOverlayImage={handleUpdateOverlayImage}
-            onDeleteOverlayImage={handleDeleteOverlayImage}
-          />
-        )}
+          {/* Active Feature Panel */}
+          <div style={{ flex: 1, overflow: 'hidden', display: 'flex' }}>
+            {/* Subtitle & Caption Styling Panel */}
+            {activeTab === 'subtitles' && (
+              <SubtitleEditorPanel
+                subtitles={subtitles}
+                setSubtitles={setSubtitles}
+                selectedSubId={selectedSubId}
+                setSelectedSubId={setSelectedSubId}
+                onTranscribeClick={() => handleTranscribeAudio()}
+                isTranscribing={isTranscribing}
+                activeCaptionStyle={activeCaptionStyle}
+                setActiveCaptionStyle={setActiveCaptionStyle}
+                captionPosition={captionPosition}
+                setCaptionPosition={setCaptionPosition}
+                captionColor={captionColor}
+                setCaptionColor={setCaptionColor}
+                captionFont={captionFont}
+                setCaptionFont={setCaptionFont}
+                captionSize={captionSize}
+                setCaptionSize={setCaptionSize}
+                onAddSubtitleAtPlayhead={handleAddSubtitleAtPlayhead}
+                onRemoveSilence={handleRemoveSilence}
+              />
+            )}
 
-        {/* Audio & AI Voiceover (TTS) Panel */}
-        {activeTab === 'audio' && (
-          <AudioPanel
-            onAddTTSVoiceover={handleAddTTSVoiceover}
-            backgroundTrack={backgroundTrack}
-            setBackgroundTrack={setBackgroundTrack}
-            bgMusicVolume={bgMusicVolume}
-            setBgMusicVolume={setBgMusicVolume}
-          />
-        )}
+            {/* Filmora Media Panel */}
+            {activeTab === 'media' && (
+              <MediaPanel
+                aspectRatio={aspectRatio}
+                currentTime={currentTime}
+                overlayImages={overlayImages}
+                selectedImageId={selectedImageId}
+                setSelectedImageId={setSelectedImageId}
+                onAddOverlayImage={handleAddOverlayImage}
+                onUpdateOverlayImage={handleUpdateOverlayImage}
+                onDeleteOverlayImage={handleDeleteOverlayImage}
+                onUploadClick={() => fileInputRef.current?.click()}
+              />
+            )}
+
+            {/* Audio & AI Voiceover (TTS) Panel */}
+            {activeTab === 'audio' && (
+              <AudioPanel
+                onAddTTSVoiceover={handleAddTTSVoiceover}
+                backgroundTrack={backgroundTrack}
+                setBackgroundTrack={setBackgroundTrack}
+                bgMusicVolume={bgMusicVolume}
+                setBgMusicVolume={setBgMusicVolume}
+              />
+            )}
+          </div>
+        </div>
 
         {/* Video Player Canvas with live kinetic subtitles */}
         <VideoCanvas
