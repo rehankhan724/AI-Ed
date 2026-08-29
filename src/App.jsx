@@ -558,6 +558,10 @@ export default function App() {
         setIsMuted={setIsMuted}
         volumeLevel={volumeLevel}
         setVolumeLevel={setVolumeLevel}
+        onUndo={handleUndo}
+        onRedo={handleRedo}
+        canUndo={canUndo}
+        canRedo={canRedo}
       />
 
       {/* Downside Multi-Track Timeline */}

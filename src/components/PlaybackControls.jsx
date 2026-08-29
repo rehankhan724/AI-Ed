@@ -1,5 +1,28 @@
 import React from 'react';
-import { Play, Pause, Scissors, Trash2, ZoomIn, ZoomOut, Volume2, Volume1, VolumeX, SkipBack, SkipForward, Sliders, Zap } from 'lucide-react';
+import {
+  LayoutGrid,
+  MousePointer2,
+  Undo,
+  Redo,
+  Trash2,
+  Scissors,
+  Type,
+  Square,
+  Video,
+  Aperture,
+  ChevronsRight,
+  Zap,
+  Sliders,
+  SkipBack,
+  Play,
+  Pause,
+  SkipForward,
+  Volume2,
+  Volume1,
+  VolumeX,
+  ZoomOut,
+  ZoomIn
+} from 'lucide-react';
 import { formatTimecode } from '../services/transcriptionService';
 
 export default function PlaybackControls({
@@ -23,7 +46,11 @@ export default function PlaybackControls({
   setIsMuted,
   volumeLevel = 1.0,
   setVolumeLevel,
-  onRemoveSilence
+  onRemoveSilence,
+  onUndo,
+  onRedo,
+  canUndo = false,
+  canRedo = false
 }) {
   const handleStepBack = () => {
     setCurrentTime(Math.max(0, currentTime - 0.04));
@@ -66,82 +93,183 @@ export default function PlaybackControls({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '0 18px',
+      padding: '0 16px',
       color: '#f8fafc',
       fontSize: '12px',
       zIndex: 25
     }}>
-      {/* Left tools: Split, Delete, Video Filters & Cut Silences */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      {/* Left section: Filmora Professional Icon Toolbar Strip */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+        {/* Layout Grid */}
         <button
-          onClick={onSplitAtPlayhead}
           className="btn-interactive"
-          style={{
-            backgroundColor: '#202630',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            color: '#f8fafc',
-            padding: '5px 12px',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            fontSize: '11.5px',
-            fontWeight: '700'
-          }}
-          title="Split clip at playhead position (Shortcut: S)"
+          style={{ padding: '6px', borderRadius: '6px', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+          title="Layout Grid View"
         >
-          <Scissors size={14} style={{ color: '#ff4d6d' }} />
-          <span>Split</span>
+          <LayoutGrid size={16} />
         </button>
 
+        {/* Select Pointer */}
+        <button
+          className="btn-interactive"
+          style={{ padding: '6px', borderRadius: '6px', backgroundColor: 'rgba(0, 210, 148, 0.12)', border: 'none', color: '#00d294', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+          title="Selection Pointer Tool"
+        >
+          <MousePointer2 size={16} />
+        </button>
+
+        {/* Divider */}
+        <div style={{ width: '1px', height: '16px', backgroundColor: 'rgba(255, 255, 255, 0.15)', margin: '0 5px' }} />
+
+        {/* Undo */}
+        <button
+          onClick={onUndo}
+          disabled={!canUndo}
+          className="btn-interactive"
+          style={{
+            padding: '6px',
+            borderRadius: '6px',
+            background: 'none',
+            border: 'none',
+            color: canUndo ? '#f8fafc' : '#475569',
+            cursor: canUndo ? 'pointer' : 'not-allowed',
+            opacity: canUndo ? 1 : 0.4,
+            display: 'flex',
+            alignItems: 'center'
+          }}
+          title="Undo Action (Ctrl+Z)"
+        >
+          <Undo size={16} />
+        </button>
+
+        {/* Redo */}
+        <button
+          onClick={onRedo}
+          disabled={!canRedo}
+          className="btn-interactive"
+          style={{
+            padding: '6px',
+            borderRadius: '6px',
+            background: 'none',
+            border: 'none',
+            color: canRedo ? '#f8fafc' : '#475569',
+            cursor: canRedo ? 'pointer' : 'not-allowed',
+            opacity: canRedo ? 1 : 0.4,
+            display: 'flex',
+            alignItems: 'center'
+          }}
+          title="Redo Action (Ctrl+Y)"
+        >
+          <Redo size={16} />
+        </button>
+
+        {/* Delete */}
         <button
           onClick={onDeleteSelected}
           disabled={!selectedSubId}
           className="btn-interactive"
           style={{
-            backgroundColor: selectedSubId ? 'rgba(255, 77, 109, 0.14)' : '#202630',
-            border: selectedSubId ? '1px solid rgba(255, 77, 109, 0.4)' : '1px solid rgba(255, 255, 255, 0.08)',
-            color: selectedSubId ? '#ff4d6d' : '#94a3b8',
-            padding: '5px 12px',
+            padding: '6px',
             borderRadius: '6px',
+            backgroundColor: selectedSubId ? 'rgba(255, 77, 109, 0.18)' : 'transparent',
+            border: 'none',
+            color: selectedSubId ? '#ff4d6d' : '#475569',
             cursor: selectedSubId ? 'pointer' : 'not-allowed',
+            opacity: selectedSubId ? 1 : 0.4,
             display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            fontSize: '11.5px',
-            fontWeight: '700'
+            alignItems: 'center'
           }}
-          title="Delete selected clip (Shortcut: Delete)"
+          title="Delete Selected Clip (Shortcut: Delete)"
         >
-          <Trash2 size={14} />
-          <span>Delete</span>
+          <Trash2 size={16} />
         </button>
 
+        {/* Split */}
+        <button
+          onClick={onSplitAtPlayhead}
+          className="btn-interactive"
+          style={{
+            padding: '6px',
+            borderRadius: '6px',
+            backgroundColor: 'rgba(244, 63, 94, 0.12)',
+            border: '1px solid rgba(244, 63, 94, 0.25)',
+            color: '#fb7185',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+          title="Split Clip at Playhead (Shortcut: S)"
+        >
+          <Scissors size={16} />
+        </button>
+
+        {/* Text */}
+        <button
+          className="btn-interactive"
+          style={{ padding: '6px', borderRadius: '6px', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+          title="Add Text & Subtitle"
+        >
+          <Type size={16} />
+        </button>
+
+        {/* Shape / Mask */}
+        <button
+          className="btn-interactive"
+          style={{ padding: '6px', borderRadius: '6px', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+          title="Crop & Shape Masking"
+        >
+          <Square size={16} />
+        </button>
+
+        {/* Video Tool */}
+        <button
+          className="btn-interactive"
+          style={{ padding: '6px', borderRadius: '6px', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+          title="Video Segment Controls"
+        >
+          <Video size={16} />
+        </button>
+
+        {/* Aperture / Visual Effects */}
+        <button
+          className="btn-interactive"
+          style={{ padding: '6px', borderRadius: '6px', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+          title="Aperture & Motion Effects"
+        >
+          <Aperture size={16} />
+        </button>
+
+        {/* Chevrons Right (More Tools) */}
+        <button
+          className="btn-interactive"
+          style={{ padding: '6px', borderRadius: '6px', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+          title="Expand Toolbar Tools"
+        >
+          <ChevronsRight size={16} />
+        </button>
+
+        {/* Cut Silences Icon Button */}
         <button
           onClick={onRemoveSilence}
           className="btn-interactive"
           style={{
-            backgroundColor: 'rgba(234, 179, 8, 0.12)',
+            padding: '6px 8px',
+            borderRadius: '6px',
+            backgroundColor: 'rgba(234, 179, 8, 0.14)',
             border: '1px solid rgba(234, 179, 8, 0.35)',
             color: '#eab308',
-            padding: '5px 12px',
-            borderRadius: '6px',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            gap: '5px',
-            fontSize: '11.5px',
-            fontWeight: '800'
+            gap: '4px'
           }}
-          title="Auto cut dead silence & compress timeline into jump-cuts"
+          title="Auto Cut Dead Silence & Jump-Cuts"
         >
-          <Zap size={14} style={{ fill: '#eab308' }} />
-          <span>Cut Silences</span>
+          <Zap size={15} style={{ fill: '#eab308' }} />
         </button>
 
         {/* Video Filter Preset dropdown */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', borderLeft: '1px solid rgba(255, 255, 255, 0.08)', paddingLeft: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', borderLeft: '1px solid rgba(255, 255, 255, 0.12)', paddingLeft: '8px', marginLeft: '4px' }}>
           <Sliders size={13} style={{ color: '#94a3b8' }} />
           <select
             value={activeFilter}
@@ -151,24 +279,24 @@ export default function PlaybackControls({
               color: '#00d294',
               border: '1px solid rgba(255, 255, 255, 0.08)',
               borderRadius: '6px',
-              padding: '4px 10px',
-              fontSize: '11.5px',
+              padding: '4px 8px',
+              fontSize: '11px',
               fontWeight: '700',
               cursor: 'pointer'
             }}
           >
-            <option value="normal">Filter: Normal</option>
-            <option value="cinematic">Filter: Cinematic Teal</option>
-            <option value="cyberpunk">Filter: Cyberpunk Neon</option>
-            <option value="vintage">Filter: Vintage Film</option>
-            <option value="bw">Filter: Black & White</option>
-            <option value="vibrant">Filter: Vibrant Colors</option>
+            <option value="normal">Normal</option>
+            <option value="cinematic">Cinematic Teal</option>
+            <option value="cyberpunk">Cyberpunk Neon</option>
+            <option value="vintage">Vintage Film</option>
+            <option value="bw">Black & White</option>
+            <option value="vibrant">Vibrant Colors</option>
           </select>
         </div>
       </div>
 
-      {/* Center tools: Frame Navigation, Play/Pause & Timecode counter */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+      {/* Center section: Frame Navigation, Play/Pause & Timecode counter */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
         <button
           onClick={handleStepBack}
           style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: '4px' }}
@@ -177,7 +305,7 @@ export default function PlaybackControls({
           <SkipBack size={16} />
         </button>
 
-        {/* Filmora Signature Bright Emerald Teal Play/Pause Button */}
+        {/* Filmora Signature Emerald Teal Play/Pause Button */}
         <button
           onClick={onPlayPauseToggle}
           className="btn-interactive"
@@ -209,12 +337,12 @@ export default function PlaybackControls({
 
         <div style={{
           fontFamily: 'monospace',
-          fontSize: '13px',
+          fontSize: '12.5px',
           fontWeight: '800',
           color: '#00d294',
           letterSpacing: '0.8px',
           backgroundColor: '#111418',
-          padding: '4px 12px',
+          padding: '4px 10px',
           borderRadius: '6px',
           border: '1px solid rgba(255, 255, 255, 0.08)'
         }}>
@@ -222,8 +350,8 @@ export default function PlaybackControls({
         </div>
       </div>
 
-      {/* Right tools: Speed, Aspect Ratio, Volume & Zoom */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+      {/* Right section: Speed, Aspect Ratio, Volume & Zoom */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
         {/* Playback Speed selector */}
         <select
           value={playbackSpeed}
@@ -233,16 +361,16 @@ export default function PlaybackControls({
             color: '#f8fafc',
             border: '1px solid rgba(255, 255, 255, 0.08)',
             borderRadius: '6px',
-            padding: '4px 8px',
+            padding: '4px 6px',
             fontSize: '11px',
             fontWeight: '700',
             cursor: 'pointer'
           }}
         >
-          <option value="0.5">0.5x Speed</option>
-          <option value="1.0">1.0x Speed</option>
-          <option value="1.5">1.5x Speed</option>
-          <option value="2.0">2.0x Speed</option>
+          <option value="0.5">0.5x</option>
+          <option value="1.0">1.0x</option>
+          <option value="1.5">1.5x</option>
+          <option value="2.0">2.0x</option>
         </select>
 
         {/* Aspect Ratio selector */}
@@ -254,20 +382,20 @@ export default function PlaybackControls({
             color: '#f8fafc',
             border: '1px solid rgba(255, 255, 255, 0.08)',
             borderRadius: '6px',
-            padding: '4px 8px',
+            padding: '4px 6px',
             fontSize: '11px',
             fontWeight: '700',
             cursor: 'pointer'
           }}
         >
-          <option value="16:9">16:9 Landscape</option>
-          <option value="9:16">9:16 Portrait (TikTok)</option>
-          <option value="1:1">1:1 Square (Insta)</option>
-          <option value="4:5">4:5 Feed</option>
+          <option value="16:9">16:9</option>
+          <option value="9:16">9:16</option>
+          <option value="1:1">1:1</option>
+          <option value="4:5">4:5</option>
         </select>
 
         {/* Volume Control */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
           <button
             onClick={() => setIsMuted(!isMuted)}
             style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
@@ -282,14 +410,14 @@ export default function PlaybackControls({
             step="0.05"
             value={isMuted ? 0 : volumeLevel}
             onChange={handleVolumeChange}
-            style={{ width: '60px' }}
+            style={{ width: '55px' }}
             title={`Volume: ${currentVolPercent}%`}
           />
-          <span style={{ fontSize: '10px', color: '#94a3b8', width: '28px' }}>{currentVolPercent}%</span>
+          <span style={{ fontSize: '10px', color: '#94a3b8', width: '26px' }}>{currentVolPercent}%</span>
         </div>
 
         {/* Timeline Zoom Slider */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', borderLeft: '1px solid rgba(255, 255, 255, 0.08)', paddingLeft: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', borderLeft: '1px solid rgba(255, 255, 255, 0.08)', paddingLeft: '10px' }}>
           <ZoomOut size={13} style={{ color: '#94a3b8' }} />
           <input
             type="range"
@@ -297,7 +425,7 @@ export default function PlaybackControls({
             max="200"
             value={zoomLevel}
             onChange={(e) => setZoomLevel(Number(e.target.value))}
-            style={{ width: '60px' }}
+            style={{ width: '55px' }}
             title={`Timeline Zoom: ${zoomLevel}%`}
           />
           <ZoomIn size={13} style={{ color: '#94a3b8' }} />
