@@ -6,12 +6,15 @@ import PlaybackControls from './components/PlaybackControls';
 import Timeline from './components/Timeline';
 import SubtitleEditorPanel from './components/SubtitleEditorPanel';
 import AudioPanel from './components/AudioPanel';
+import MediaPanel from './components/MediaPanel';
 import RenderModal from './components/RenderModal';
 import { transcribeVideoAudio, DEMO_SAMPLE_SUBTITLES } from './services/transcriptionService';
 
 export default function App() {
   // Video & Playback state
   const [videoSrc, setVideoSrc] = useState(null);
+  const [overlayImages, setOverlayImages] = useState([]);
+  const [selectedImageId, setSelectedImageId] = useState(null);
   const [currentFileName, setCurrentFileName] = useState('sample_video.mp4');
   const [duration, setDuration] = useState(15);
   const [currentTime, setCurrentTime] = useState(0);
@@ -35,11 +38,20 @@ export default function App() {
   const [captionFont, setCaptionFont] = useState('Montserrat');
   const [captionSize, setCaptionSize] = useState(26);
 
-  // Studio UI state
+  // Studio UI state (Enforced Dark Studio Theme)
+  const [themeMode, setThemeMode] = useState('dark');
+
   const [activeTab, setActiveTab] = useState('subtitles');
   const [aspectRatio, setAspectRatio] = useState('16:9');
   const [zoomLevel, setZoomLevel] = useState(100);
   const [isRenderModalOpen, setIsRenderModalOpen] = useState(false);
+
+  // Force dark theme on mount & localStorage reset
+  useEffect(() => {
+    document.documentElement.className = 'theme-dark';
+    document.body.className = 'theme-dark';
+    localStorage.setItem('aied_theme', 'dark');
+  }, []);
 
   // Refs
   const videoRef = useRef(null);
@@ -393,8 +405,23 @@ export default function App() {
     setSelectedSubId(newSub.id);
   };
 
+  // Multi-Clip Image Overlay Handlers
+  const handleAddOverlayImage = (newImg) => {
+    setOverlayImages(prev => [...prev, newImg]);
+    setSelectedImageId(newImg.id);
+  };
+
+  const handleUpdateOverlayImage = (id, updates) => {
+    setOverlayImages(prev => prev.map(img => img.id === id ? { ...img, ...updates } : img));
+  };
+
+  const handleDeleteOverlayImage = (id) => {
+    setOverlayImages(prev => prev.filter(img => img.id !== id));
+    if (selectedImageId === id) setSelectedImageId(null);
+  };
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', backgroundColor: '#070a13' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', backgroundColor: 'var(--bg-dark)', transition: 'background-color 0.3s ease' }}>
       
       {/* Hidden File Input */}
       <input
@@ -416,6 +443,8 @@ export default function App() {
         onRedo={handleRedo}
         canUndo={canUndo}
         canRedo={canRedo}
+        themeMode={themeMode}
+        setThemeMode={setThemeMode}
       />
 
       {/* Main Studio Area */}
@@ -450,9 +479,22 @@ export default function App() {
             setCaptionFont={setCaptionFont}
             captionSize={captionSize}
             setCaptionSize={setCaptionSize}
-            currentTime={currentTime}
             onAddSubtitleAtPlayhead={handleAddSubtitleAtPlayhead}
             onRemoveSilence={handleRemoveSilence}
+          />
+        )}
+
+        {/* Stock Media & Image Search Panel */}
+        {activeTab === 'media' && (
+          <MediaPanel
+            aspectRatio={aspectRatio}
+            currentTime={currentTime}
+            overlayImages={overlayImages}
+            selectedImageId={selectedImageId}
+            setSelectedImageId={setSelectedImageId}
+            onAddOverlayImage={handleAddOverlayImage}
+            onUpdateOverlayImage={handleUpdateOverlayImage}
+            onDeleteOverlayImage={handleDeleteOverlayImage}
           />
         )}
 
@@ -473,6 +515,11 @@ export default function App() {
           currentTime={currentTime}
           isPlaying={isPlaying}
           subtitles={subtitles}
+          overlayImages={overlayImages}
+          selectedImageId={selectedImageId}
+          setSelectedImageId={setSelectedImageId}
+          onUpdateOverlayImage={handleUpdateOverlayImage}
+          onDeleteOverlayImage={handleDeleteOverlayImage}
           activeCaptionStyle={activeCaptionStyle}
           captionPosition={captionPosition}
           captionColor={captionColor}
@@ -525,6 +572,10 @@ export default function App() {
         zoomLevel={zoomLevel}
         isPlaying={isPlaying}
         backgroundTrack={backgroundTrack}
+        overlayImages={overlayImages}
+        selectedImageId={selectedImageId}
+        setSelectedImageId={setSelectedImageId}
+        onUpdateOverlayImage={handleUpdateOverlayImage}
       />
 
       {/* Render & Export Modal */}

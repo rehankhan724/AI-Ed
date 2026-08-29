@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Pause, Scissors, Trash2, ZoomIn, ZoomOut, Volume2, Volume1, VolumeX, SkipBack, SkipForward, Sliders } from 'lucide-react';
+import { Play, Pause, Scissors, Trash2, ZoomIn, ZoomOut, Volume2, Volume1, VolumeX, SkipBack, SkipForward, Sliders, Zap } from 'lucide-react';
 import { formatTimecode } from '../services/transcriptionService';
 
 export default function PlaybackControls({
@@ -25,17 +25,14 @@ export default function PlaybackControls({
   setVolumeLevel,
   onRemoveSilence
 }) {
-  // Step backward 1 frame (approx 0.04s for 25fps)
   const handleStepBack = () => {
     setCurrentTime(Math.max(0, currentTime - 0.04));
   };
 
-  // Step forward 1 frame
   const handleStepForward = () => {
     setCurrentTime(Math.min(duration, currentTime + 0.04));
   };
 
-  // Handle Volume Change
   const handleVolumeChange = (e) => {
     const val = parseFloat(e.target.value);
     if (setVolumeLevel) {
@@ -48,14 +45,13 @@ export default function PlaybackControls({
     }
   };
 
-  // Render Volume Icon based on level
   const renderVolumeIcon = () => {
     if (isMuted || volumeLevel === 0) {
-      return <VolumeX size={16} style={{ color: '#ef4444' }} />;
+      return <VolumeX size={15} style={{ color: '#ff4d6d' }} />;
     } else if (volumeLevel < 0.5) {
-      return <Volume1 size={16} style={{ color: '#38bdf8' }} />;
+      return <Volume1 size={15} style={{ color: '#00d294' }} />;
     } else {
-      return <Volume2 size={16} style={{ color: '#38bdf8' }} />;
+      return <Volume2 size={15} style={{ color: '#00d294' }} />;
     }
   };
 
@@ -63,58 +59,60 @@ export default function PlaybackControls({
 
   return (
     <div style={{
-      height: '44px',
-      backgroundColor: '#070a13',
-      borderTop: '1px solid #1e293b',
-      borderBottom: '1px solid #1e293b',
+      height: '48px',
+      backgroundColor: '#171b21',
+      borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+      borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '0 16px',
-      color: '#cbd5e1',
+      padding: '0 18px',
+      color: '#f8fafc',
       fontSize: '12px',
-      zIndex: 20
+      zIndex: 25
     }}>
-      {/* Left tools: Split, Delete, Video Filters & Color Grading */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+      {/* Left tools: Split, Delete, Video Filters & Cut Silences */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <button
           onClick={onSplitAtPlayhead}
+          className="btn-interactive"
           style={{
-            backgroundColor: '#1e293b',
-            border: '1px solid #334155',
+            backgroundColor: '#202630',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
             color: '#f8fafc',
-            padding: '4px 10px',
+            padding: '5px 12px',
             borderRadius: '6px',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            gap: '5px',
-            fontSize: '11px',
-            fontWeight: '600'
+            gap: '6px',
+            fontSize: '11.5px',
+            fontWeight: '700'
           }}
-          title="Split clip at playhead"
+          title="Split clip at playhead position (Shortcut: S)"
         >
-          <Scissors size={14} style={{ color: '#38bdf8' }} />
+          <Scissors size={14} style={{ color: '#ff4d6d' }} />
           <span>Split</span>
         </button>
 
         <button
           onClick={onDeleteSelected}
           disabled={!selectedSubId}
+          className="btn-interactive"
           style={{
-            backgroundColor: selectedSubId ? 'rgba(239, 68, 68, 0.15)' : '#1e293b',
-            border: selectedSubId ? '1px solid rgba(239, 68, 68, 0.4)' : '1px solid #334155',
-            color: selectedSubId ? '#ef4444' : '#475569',
-            padding: '4px 10px',
+            backgroundColor: selectedSubId ? 'rgba(255, 77, 109, 0.14)' : '#202630',
+            border: selectedSubId ? '1px solid rgba(255, 77, 109, 0.4)' : '1px solid rgba(255, 255, 255, 0.08)',
+            color: selectedSubId ? '#ff4d6d' : '#94a3b8',
+            padding: '5px 12px',
             borderRadius: '6px',
             cursor: selectedSubId ? 'pointer' : 'not-allowed',
             display: 'flex',
             alignItems: 'center',
-            gap: '5px',
-            fontSize: '11px',
-            fontWeight: '600'
+            gap: '6px',
+            fontSize: '11.5px',
+            fontWeight: '700'
           }}
-          title="Delete selected clip"
+          title="Delete selected clip (Shortcut: Delete)"
         >
           <Trash2 size={14} />
           <span>Delete</span>
@@ -122,40 +120,40 @@ export default function PlaybackControls({
 
         <button
           onClick={onRemoveSilence}
+          className="btn-interactive"
           style={{
-            backgroundColor: 'rgba(245, 158, 11, 0.15)',
-            border: '1px solid rgba(245, 158, 11, 0.4)',
-            color: '#f59e0b',
-            padding: '4px 10px',
+            backgroundColor: 'rgba(234, 179, 8, 0.12)',
+            border: '1px solid rgba(234, 179, 8, 0.35)',
+            color: '#eab308',
+            padding: '5px 12px',
             borderRadius: '6px',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             gap: '5px',
-            fontSize: '11px',
-            fontWeight: '700',
-            transition: 'all 0.15s ease'
+            fontSize: '11.5px',
+            fontWeight: '800'
           }}
           title="Auto cut dead silence & compress timeline into jump-cuts"
         >
-          <span style={{ fontSize: '12px' }}>⚡</span>
+          <Zap size={14} style={{ fill: '#eab308' }} />
           <span>Cut Silences</span>
         </button>
 
         {/* Video Filter Preset dropdown */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', borderLeft: '1px solid #1e293b', paddingLeft: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', borderLeft: '1px solid rgba(255, 255, 255, 0.08)', paddingLeft: '12px' }}>
           <Sliders size={13} style={{ color: '#94a3b8' }} />
           <select
             value={activeFilter}
             onChange={(e) => setActiveFilter(e.target.value)}
             style={{
-              backgroundColor: '#1e293b',
-              color: '#38bdf8',
-              border: '1px solid #334155',
+              backgroundColor: '#1b2028',
+              color: '#00d294',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
               borderRadius: '6px',
-              padding: '3px 8px',
-              fontSize: '11px',
-              fontWeight: '600',
+              padding: '4px 10px',
+              fontSize: '11.5px',
+              fontWeight: '700',
               cursor: 'pointer'
             }}
           >
@@ -170,120 +168,113 @@ export default function PlaybackControls({
       </div>
 
       {/* Center tools: Frame Navigation, Play/Pause & Timecode counter */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
         <button
           onClick={handleStepBack}
-          style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
-          title="Step 1 Frame Back"
+          style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: '4px' }}
+          title="Step 1 Frame Back (Left Arrow)"
         >
-          <SkipBack size={15} />
+          <SkipBack size={16} />
         </button>
 
+        {/* Filmora Signature Bright Emerald Teal Play/Pause Button */}
         <button
           onClick={onPlayPauseToggle}
+          className="btn-interactive"
           style={{
-            width: '32px',
-            height: '32px',
+            width: '36px',
+            height: '36px',
             borderRadius: '50%',
-            backgroundColor: '#3b82f6',
-            color: '#fff',
+            background: 'linear-gradient(135deg, #00d294 0%, #00b37e 100%)',
+            color: '#08121a',
             border: 'none',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            boxShadow: '0 0 12px rgba(59, 130, 246, 0.5)'
+            boxShadow: '0 3px 12px rgba(0, 210, 148, 0.45)'
           }}
+          title={isPlaying ? 'Pause (Spacebar)' : 'Play (Spacebar)'}
         >
-          {isPlaying ? <Pause size={16} /> : <Play size={16} style={{ marginLeft: '2px' }} />}
+          {isPlaying ? <Pause size={17} style={{ color: '#08121a' }} /> : <Play size={17} style={{ marginLeft: '2px', color: '#08121a' }} />}
         </button>
 
         <button
           onClick={handleStepForward}
-          style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
-          title="Step 1 Frame Forward"
+          style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: '4px' }}
+          title="Step 1 Frame Forward (Right Arrow)"
         >
-          <SkipForward size={15} />
+          <SkipForward size={16} />
         </button>
 
         <div style={{
           fontFamily: 'monospace',
           fontSize: '13px',
-          fontWeight: '700',
-          color: '#38bdf8',
-          letterSpacing: '0.5px',
-          backgroundColor: '#0d1220',
-          padding: '3px 10px',
+          fontWeight: '800',
+          color: '#00d294',
+          letterSpacing: '0.8px',
+          backgroundColor: '#111418',
+          padding: '4px 12px',
           borderRadius: '6px',
-          border: '1px solid #1e293b'
+          border: '1px solid rgba(255, 255, 255, 0.08)'
         }}>
-          {formatTimecode(currentTime)} <span style={{ color: '#475569' }}>/</span> {formatTimecode(duration)}
+          {formatTimecode(currentTime)} / {formatTimecode(duration || 0)}
         </div>
       </div>
 
-      {/* Right tools: Speed, Aspect Ratio, Volume Control, Zoom slider */}
+      {/* Right tools: Speed, Aspect Ratio, Volume & Zoom */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-        {/* Speed Dropdown */}
+        {/* Playback Speed selector */}
         <select
           value={playbackSpeed}
-          onChange={(e) => setPlaybackSpeed(Number(e.target.value))}
+          onChange={(e) => setPlaybackSpeed(parseFloat(e.target.value))}
           style={{
-            backgroundColor: '#1e293b',
-            color: '#cbd5e1',
-            border: '1px solid #334155',
+            backgroundColor: '#1b2028',
+            color: '#f8fafc',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
             borderRadius: '6px',
-            padding: '3px 6px',
+            padding: '4px 8px',
             fontSize: '11px',
-            fontWeight: '600',
+            fontWeight: '700',
             cursor: 'pointer'
           }}
         >
           <option value="0.5">0.5x Speed</option>
-          <option value="1">1.0x Speed</option>
-          <option value="1.25">1.25x Speed</option>
+          <option value="1.0">1.0x Speed</option>
           <option value="1.5">1.5x Speed</option>
-          <option value="2">2.0x Speed</option>
+          <option value="2.0">2.0x Speed</option>
         </select>
 
-        {/* Aspect Ratio */}
+        {/* Aspect Ratio selector */}
         <select
           value={aspectRatio}
           onChange={(e) => setAspectRatio(e.target.value)}
           style={{
-            backgroundColor: '#1e293b',
+            backgroundColor: '#1b2028',
             color: '#f8fafc',
-            border: '1px solid #334155',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
             borderRadius: '6px',
-            padding: '3px 8px',
+            padding: '4px 8px',
             fontSize: '11px',
-            fontWeight: '600',
+            fontWeight: '700',
             cursor: 'pointer'
           }}
         >
           <option value="16:9">16:9 Landscape</option>
-          <option value="9:16">9:16 Shorts/Reels</option>
-          <option value="1:1">1:1 Square</option>
-          <option value="4:5">4:5 Portrait</option>
+          <option value="9:16">9:16 Portrait (TikTok)</option>
+          <option value="1:1">1:1 Square (Insta)</option>
+          <option value="4:5">4:5 Feed</option>
         </select>
 
-        {/* Dedicated Volume Control (Mute Toggle + Interactive Slider + % Badge) */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px',
-          backgroundColor: '#0f172a',
-          padding: '3px 8px',
-          borderRadius: '6px',
-          border: '1px solid #1e293b'
-        }}>
+        {/* Volume Control */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <button
             onClick={() => setIsMuted(!isMuted)}
-            style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', cursor: 'pointer', padding: 0 }}
-            title={isMuted ? 'Unmute' : 'Mute'}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+            title={isMuted ? 'Unmute Audio' : 'Mute Audio'}
           >
             {renderVolumeIcon()}
           </button>
-          
           <input
             type="range"
             min="0"
@@ -291,32 +282,25 @@ export default function PlaybackControls({
             step="0.05"
             value={isMuted ? 0 : volumeLevel}
             onChange={handleVolumeChange}
-            style={{
-              width: '65px',
-              height: '4px',
-              accentColor: '#38bdf8',
-              cursor: 'pointer'
-            }}
+            style={{ width: '60px' }}
             title={`Volume: ${currentVolPercent}%`}
           />
-          <span style={{ fontSize: '10px', fontWeight: '700', color: isMuted ? '#ef4444' : '#38bdf8', minWidth: '30px' }}>
-            {currentVolPercent}%
-          </span>
+          <span style={{ fontSize: '10px', color: '#94a3b8', width: '28px' }}>{currentVolPercent}%</span>
         </div>
 
         {/* Timeline Zoom Slider */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <ZoomOut size={13} style={{ color: '#64748b' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px', borderLeft: '1px solid rgba(255, 255, 255, 0.08)', paddingLeft: '12px' }}>
+          <ZoomOut size={13} style={{ color: '#94a3b8' }} />
           <input
             type="range"
             min="50"
             max="200"
             value={zoomLevel}
             onChange={(e) => setZoomLevel(Number(e.target.value))}
-            style={{ width: '60px', cursor: 'pointer', accentColor: '#3b82f6' }}
-            title="Timeline Zoom"
+            style={{ width: '60px' }}
+            title={`Timeline Zoom: ${zoomLevel}%`}
           />
-          <ZoomIn size={13} style={{ color: '#64748b' }} />
+          <ZoomIn size={13} style={{ color: '#94a3b8' }} />
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mic, Music, Volume2, Sparkles, Play, Plus, Trash2 } from 'lucide-react';
+import { Mic, Music, Sparkles, Check } from 'lucide-react';
 
 export default function AudioPanel({
   onAddTTSVoiceover,
@@ -53,26 +53,27 @@ export default function AudioPanel({
 
   return (
     <div style={{
-      width: '290px',
-      backgroundColor: '#0a0e1a',
-      borderRight: '1px solid #1e293b',
+      width: '300px',
+      backgroundColor: 'var(--bg-panel)',
+      borderRight: '1px solid var(--border-subtle)',
       display: 'flex',
       flexDirection: 'column',
-      color: '#f8fafc',
+      color: 'var(--text-main)',
       fontSize: '13px',
-      zIndex: 15
+      zIndex: 15,
+      transition: 'background-color 0.3s ease, border-color 0.3s ease'
     }}>
       {/* Panel Header */}
       <div style={{
-        padding: '14px 16px',
-        borderBottom: '1px solid #1e293b',
+        padding: '16px',
+        borderBottom: '1px solid var(--border-subtle)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: '#0c1120'
+        backgroundColor: 'var(--bg-panel-header)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '800' }}>
-          <Mic size={16} style={{ color: '#06b6d4' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '800', fontSize: '14px' }}>
+          <Mic size={18} style={{ color: 'var(--accent-cyan)' }} />
           <span>AI Voiceover & Music</span>
         </div>
       </div>
@@ -81,17 +82,18 @@ export default function AudioPanel({
         
         {/* Text-to-Speech Generator Section */}
         <div style={{
-          background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%)',
-          border: '1px solid rgba(6, 182, 212, 0.3)',
-          borderRadius: '10px',
+          background: 'linear-gradient(135deg, rgba(2, 132, 199, 0.12) 0%, rgba(37, 99, 235, 0.12) 100%)',
+          border: '1px solid rgba(2, 132, 199, 0.35)',
+          borderRadius: '12px',
           padding: '14px',
-          marginBottom: '18px'
+          marginBottom: '20px',
+          boxShadow: 'var(--shadow-card)'
         }}>
-          <h4 style={{ fontSize: '13px', fontWeight: '800', marginBottom: '6px', color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Sparkles size={14} /> AI Voiceover Generator (TTS)
+          <h4 style={{ fontSize: '13px', fontWeight: '800', marginBottom: '6px', color: 'var(--accent-cyan)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Sparkles size={15} /> AI Voiceover Generator (TTS)
           </h4>
-          <p style={{ fontSize: '11px', color: '#94a3b8', marginBottom: '10px', lineHeight: '1.4' }}>
-            Type script text to generate natural spoken AI voice synced to timeline.
+          <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: '1.45' }}>
+            Type script text to generate spoken AI voice synced to timeline.
           </p>
 
           <textarea
@@ -100,36 +102,36 @@ export default function AudioPanel({
             placeholder="Type your script here..."
             style={{
               width: '100%',
-              height: '60px',
-              backgroundColor: '#070a13',
-              border: '1px solid #334155',
-              borderRadius: '6px',
-              color: '#fff',
-              padding: '8px',
+              height: '65px',
+              backgroundColor: 'var(--bg-input)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: '8px',
+              color: 'var(--text-main)',
+              padding: '8px 10px',
               fontSize: '12px',
               fontFamily: 'inherit',
               resize: 'none',
               outline: 'none',
-              marginBottom: '10px'
+              marginBottom: '12px'
             }}
           />
 
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '14px' }}>
             <div style={{ flex: 1 }}>
-              <label style={{ fontSize: '10px', color: '#94a3b8', fontWeight: '700' }}>Speech Rate</label>
+              <label style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: '700' }}>Speech Pace</label>
               <select
                 value={speechRate}
                 onChange={(e) => setSpeechRate(Number(e.target.value))}
                 style={{
                   width: '100%',
-                  backgroundColor: '#0d1220',
-                  color: '#38bdf8',
-                  border: '1px solid #1e293b',
-                  borderRadius: '5px',
-                  padding: '4px 6px',
-                  fontSize: '11px',
+                  backgroundColor: 'var(--bg-input)',
+                  color: 'var(--accent-cyan)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '6px',
+                  padding: '5px 8px',
+                  fontSize: '11.5px',
                   fontWeight: '700',
-                  marginTop: '2px'
+                  marginTop: '4px'
                 }}
               >
                 <option value="0.8">0.8x Slow</option>
@@ -143,46 +145,48 @@ export default function AudioPanel({
           <button
             onClick={handleGenerateSpeech}
             disabled={isGenerating}
+            className="btn-interactive"
             style={{
               width: '100%',
-              background: isGenerating ? '#334155' : 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)',
+              background: isGenerating ? 'var(--border-subtle)' : 'linear-gradient(135deg, #0284c7 0%, #2563eb 100%)',
               color: '#fff',
               border: 'none',
-              borderRadius: '7px',
-              padding: '9px 12px',
+              borderRadius: '8px',
+              padding: '10px 14px',
               fontWeight: '700',
-              fontSize: '12px',
+              fontSize: '12.5px',
               cursor: isGenerating ? 'not-allowed' : 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '6px',
-              boxShadow: '0 4px 14px rgba(6, 182, 212, 0.4)'
+              gap: '7px',
+              boxShadow: isGenerating ? 'none' : '0 4px 14px rgba(2, 132, 199, 0.35)'
             }}
           >
-            <Mic size={14} className={isGenerating ? 'animate-spin' : ''} />
-            {isGenerating ? 'Speaking AI Voice...' : 'Generate AI Voiceover'}
+            <Mic size={15} className={isGenerating ? 'animate-spin' : ''} />
+            <span>{isGenerating ? 'Speaking AI Voice...' : 'Generate AI Voiceover'}</span>
           </button>
         </div>
 
         {/* Background Music Selector Section */}
-        <div style={{ marginBottom: '18px' }}>
-          <label style={{ fontSize: '11px', fontWeight: '800', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <Music size={12} /> Background Music Vibe
+        <div style={{ marginBottom: '20px' }}>
+          <label style={{ fontSize: '11px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Music size={13} style={{ color: 'var(--accent-pink)' }} /> Background Music Vibe
           </label>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '10px' }}>
             {bgTracks.map((tr) => (
               <button
                 key={tr.id}
                 onClick={() => setBackgroundTrack && setBackgroundTrack(tr.id)}
+                className="btn-interactive"
                 style={{
-                  padding: '9px 12px',
-                  borderRadius: '7px',
-                  backgroundColor: backgroundTrack === tr.id ? '#1e293b' : '#0d1220',
-                  border: backgroundTrack === tr.id ? '1px solid #38bdf8' : '1px solid #1e293b',
-                  color: backgroundTrack === tr.id ? '#38bdf8' : '#cbd5e1',
-                  fontSize: '11px',
+                  padding: '10px 12px',
+                  borderRadius: '8px',
+                  backgroundColor: backgroundTrack === tr.id ? 'rgba(2, 132, 199, 0.15)' : 'var(--bg-card)',
+                  border: backgroundTrack === tr.id ? '1px solid var(--accent-cyan)' : '1px solid var(--border-subtle)',
+                  color: backgroundTrack === tr.id ? 'var(--accent-cyan)' : 'var(--text-main)',
+                  fontSize: '11.5px',
                   fontWeight: '700',
                   cursor: 'pointer',
                   textAlign: 'left',
@@ -192,7 +196,7 @@ export default function AudioPanel({
                 }}
               >
                 <span>{tr.name}</span>
-                {backgroundTrack === tr.id && <span style={{ fontSize: '10px', color: '#10b981' }}>Active</span>}
+                {backgroundTrack === tr.id && <Check size={14} style={{ color: 'var(--accent-emerald)' }} />}
               </button>
             ))}
           </div>
@@ -200,10 +204,10 @@ export default function AudioPanel({
 
         {/* Background Music Volume */}
         {backgroundTrack && backgroundTrack !== 'none' && (
-          <div style={{ backgroundColor: '#0d1220', padding: '12px', borderRadius: '8px', border: '1px solid #1e293b' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#94a3b8', marginBottom: '6px' }}>
+          <div style={{ backgroundColor: 'var(--bg-card)', padding: '14px', borderRadius: '10px', border: '1px solid var(--border-subtle)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', color: 'var(--text-muted)', marginBottom: '8px' }}>
               <span>Background Volume:</span>
-              <strong style={{ color: '#38bdf8' }}>{Math.round((bgMusicVolume || 0.3) * 100)}%</strong>
+              <strong style={{ color: 'var(--accent-cyan)' }}>{Math.round((bgMusicVolume || 0.3) * 100)}%</strong>
             </div>
             <input
               type="range"
@@ -212,7 +216,7 @@ export default function AudioPanel({
               step="0.05"
               value={bgMusicVolume || 0.3}
               onChange={(e) => setBgMusicVolume && setBgMusicVolume(Number(e.target.value))}
-              style={{ width: '100%', cursor: 'pointer', accentColor: '#38bdf8' }}
+              style={{ width: '100%', cursor: 'pointer', accentColor: 'var(--accent-cyan)' }}
             />
           </div>
         )}
