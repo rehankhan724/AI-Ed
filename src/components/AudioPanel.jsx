@@ -8,7 +8,7 @@ export default function AudioPanel({
   bgMusicVolume,
   setBgMusicVolume
 }) {
-  const [ttsText, setTtsText] = useState('WELCOME TO AI EDITOR PRO VIDEO STUDIO');
+  const [ttsText, setTtsText] = useState('WELCOME TO MAGIC PRO VIDEO STUDIO');
   const [selectedVoice, setSelectedVoice] = useState('en-US');
   const [speechRate, setSpeechRate] = useState(1.0);
   const [isGenerating, setIsGenerating] = useState(false);

@@ -50,7 +50,7 @@ export default function Navbar({
               letterSpacing: '-0.3px',
               color: '#ffffff'
             }}>
-              AI Editor
+              Magic Pro
             </span>
             <span style={{
               fontSize: '9.5px',
