@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Plus, Type, Palette, Zap } from 'lucide-react';
+import { Plus, Type, Palette } from 'lucide-react';
 
 export default function SubtitleEditorPanel({
   subtitles,
@@ -56,91 +56,8 @@ export default function SubtitleEditorPanel({
       fontSize: '13px',
       zIndex: 15
     }}>
-      {/* Panel Header */}
-      <div style={{
-        padding: '16px',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: '#1c2129'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '800', fontSize: '14px', letterSpacing: '-0.2px' }}>
-          <Sparkles size={17} style={{ color: '#00d294' }} />
-          <span>AI Titles & Styling</span>
-        </div>
-        <span style={{ fontSize: '10px', color: '#00d294', backgroundColor: 'rgba(0, 210, 148, 0.15)', padding: '2px 7px', borderRadius: '5px', fontWeight: '800' }}>
-          PRO
-        </span>
-      </div>
-
       <div style={{ padding: '16px', flex: 1, overflowY: 'auto' }}>
         
-        {/* Audio to Text Converter CTA Card */}
-        <div style={{
-          background: 'linear-gradient(135deg, rgba(0, 210, 148, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)',
-          border: '1px solid rgba(0, 210, 148, 0.3)',
-          borderRadius: '10px',
-          padding: '14px',
-          marginBottom: '20px',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.4)'
-        }}>
-          <h4 style={{ fontSize: '13px', fontWeight: '800', marginBottom: '4px', color: '#00d294', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Sparkles size={15} /> Audio Speech Extraction
-          </h4>
-          <p style={{ fontSize: '11px', color: '#94a3b8', marginBottom: '12px', lineHeight: '1.45' }}>
-            Transcribe speech in video to frame-synced kinetic subtitles.
-          </p>
-          <button
-            onClick={onTranscribeClick}
-            disabled={isTranscribing}
-            className="btn-interactive"
-            style={{
-              width: '100%',
-              background: isTranscribing ? 'rgba(255,255,255,0.1)' : 'linear-gradient(135deg, #00d294 0%, #00b37e 100%)',
-              color: isTranscribing ? '#94a3b8' : '#08121a',
-              border: 'none',
-              borderRadius: '6px',
-              padding: '9px 14px',
-              fontWeight: '800',
-              fontSize: '12.5px',
-              cursor: isTranscribing ? 'not-allowed' : 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '7px',
-              boxShadow: isTranscribing ? 'none' : '0 3px 12px rgba(0, 210, 148, 0.35)'
-            }}
-          >
-            <Sparkles size={15} className={isTranscribing ? 'animate-spin' : ''} />
-            <span>{isTranscribing ? 'Extracting Speech...' : 'Extract AI Subtitles'}</span>
-          </button>
-          
-          <button
-            onClick={onRemoveSilence}
-            className="btn-interactive"
-            style={{
-              width: '100%',
-              marginTop: '8px',
-              backgroundColor: '#202630',
-              color: '#f8fafc',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: '6px',
-              padding: '8px 12px',
-              fontWeight: '700',
-              fontSize: '11.5px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px'
-            }}
-          >
-            <Zap size={14} style={{ color: '#eab308' }} />
-            <span>Auto Cut Silences & Jump-Cuts</span>
-          </button>
-        </div>
-
         {/* Caption Style Presets */}
         <div style={{ marginBottom: '22px' }}>
           <h4 style={{ fontSize: '11px', fontWeight: '800', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '10px' }}>

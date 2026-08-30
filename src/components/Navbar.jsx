@@ -6,7 +6,6 @@ export default function Navbar({
   onRenderClick,
   onTranscribeClick,
   isTranscribing,
-  currentFileName,
   onUndo,
   onRedo,
   canUndo,
@@ -65,32 +64,6 @@ export default function Navbar({
               PRO
             </span>
           </div>
-        </div>
-
-        <div style={{
-          height: '18px',
-          width: '1px',
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          margin: '0 4px'
-        }} />
-
-        {/* Current Active File Tag */}
-        <div style={{
-          backgroundColor: '#202630',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          padding: '4px 10px',
-          borderRadius: '6px',
-          fontSize: '11px',
-          color: '#00d294',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px',
-          fontWeight: '700'
-        }}>
-          <span className="live-pulse-dot" style={{ backgroundColor: '#ff4d6d' }} />
-          <span style={{ maxWidth: '160px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {currentFileName || 'Project Media'}
-          </span>
         </div>
       </div>
 

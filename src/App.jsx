@@ -15,7 +15,6 @@ export default function App() {
   const [videoSrc, setVideoSrc] = useState(null);
   const [overlayImages, setOverlayImages] = useState([]);
   const [selectedImageId, setSelectedImageId] = useState(null);
-  const [currentFileName, setCurrentFileName] = useState('sample_video.mp4');
   const [duration, setDuration] = useState(15);
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -37,9 +36,6 @@ export default function App() {
   const [captionColor, setCaptionColor] = useState('#facc15');
   const [captionFont, setCaptionFont] = useState('Montserrat');
   const [captionSize, setCaptionSize] = useState(26);
-
-  // Studio UI state (Enforced Dark Studio Theme)
-  const [themeMode, setThemeMode] = useState('dark');
 
   const [activeTab, setActiveTab] = useState('subtitles');
   const [aspectRatio, setAspectRatio] = useState('16:9');
@@ -440,93 +436,14 @@ export default function App() {
         onRenderClick={() => setIsRenderModalOpen(true)}
         onTranscribeClick={() => handleTranscribeAudio()}
         isTranscribing={isTranscribing}
-        currentFileName={currentFileName}
         onUndo={handleUndo}
         onRedo={handleRedo}
         canUndo={canUndo}
         canRedo={canRedo}
-        themeMode={themeMode}
-        setThemeMode={setThemeMode}
       />
 
       {/* Main Studio Workspace */}
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-        
-        {/* Left Side Studio Panel (Navigation Tabs + Active Panel) */}
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '360px',
-          backgroundColor: '#12151a',
-          borderRight: '1px solid rgba(255, 255, 255, 0.08)',
-          shrink: 0,
-          overflow: 'hidden'
-        }}>
-          {/* Filmora Navigation Header Tab Strip */}
-          <Sidebar
-            activeTab={activeTab}
-            setActiveTab={(tab) => {
-              if (tab === 'export') {
-                setIsRenderModalOpen(true);
-              } else {
-                setActiveTab(tab);
-              }
-            }}
-          />
-
-          {/* Active Feature Panel */}
-          <div style={{ flex: 1, overflow: 'hidden', display: 'flex' }}>
-            {/* Subtitle & Caption Styling Panel */}
-            {activeTab === 'subtitles' && (
-              <SubtitleEditorPanel
-                subtitles={subtitles}
-                setSubtitles={setSubtitles}
-                selectedSubId={selectedSubId}
-                setSelectedSubId={setSelectedSubId}
-                onTranscribeClick={() => handleTranscribeAudio()}
-                isTranscribing={isTranscribing}
-                activeCaptionStyle={activeCaptionStyle}
-                setActiveCaptionStyle={setActiveCaptionStyle}
-                captionPosition={captionPosition}
-                setCaptionPosition={setCaptionPosition}
-                captionColor={captionColor}
-                setCaptionColor={setCaptionColor}
-                captionFont={captionFont}
-                setCaptionFont={setCaptionFont}
-                captionSize={captionSize}
-                setCaptionSize={setCaptionSize}
-                onAddSubtitleAtPlayhead={handleAddSubtitleAtPlayhead}
-                onRemoveSilence={handleRemoveSilence}
-              />
-            )}
-
-            {/* Filmora Media Panel */}
-            {activeTab === 'media' && (
-              <MediaPanel
-                aspectRatio={aspectRatio}
-                currentTime={currentTime}
-                overlayImages={overlayImages}
-                selectedImageId={selectedImageId}
-                setSelectedImageId={setSelectedImageId}
-                onAddOverlayImage={handleAddOverlayImage}
-                onUpdateOverlayImage={handleUpdateOverlayImage}
-                onDeleteOverlayImage={handleDeleteOverlayImage}
-                onUploadClick={() => fileInputRef.current?.click()}
-              />
-            )}
-
-            {/* Audio & AI Voiceover (TTS) Panel */}
-            {activeTab === 'audio' && (
-              <AudioPanel
-                onAddTTSVoiceover={handleAddTTSVoiceover}
-                backgroundTrack={backgroundTrack}
-                setBackgroundTrack={setBackgroundTrack}
-                bgMusicVolume={bgMusicVolume}
-                setBgMusicVolume={setBgMusicVolume}
-              />
-            )}
-          </div>
-        </div>
 
         {/* Video Player Canvas with live kinetic subtitles */}
         <VideoCanvas
@@ -552,6 +469,79 @@ export default function App() {
           onTranscribeClick={() => handleTranscribeAudio()}
           isTranscribing={isTranscribing}
         />
+
+        {/* Right Side Studio Panel (Navigation Tabs + Active Panel) */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '360px',
+          flexShrink: 0,
+          backgroundColor: '#12151a',
+          borderLeft: '1px solid rgba(255, 255, 255, 0.08)',
+          overflow: 'hidden'
+        }}>
+          {/* Filmora Navigation Header Tab Strip */}
+          <Sidebar
+            activeTab={activeTab}
+            setActiveTab={(tab) => {
+              if (tab === 'export') {
+                setIsRenderModalOpen(true);
+              } else {
+                setActiveTab(tab);
+              }
+            }}
+          />
+
+          {/* Active Feature Panel */}
+          <div style={{ flex: 1, overflow: 'hidden', display: 'flex' }}>
+            {activeTab === 'subtitles' && (
+              <SubtitleEditorPanel
+                subtitles={subtitles}
+                setSubtitles={setSubtitles}
+                selectedSubId={selectedSubId}
+                setSelectedSubId={setSelectedSubId}
+                onTranscribeClick={() => handleTranscribeAudio()}
+                isTranscribing={isTranscribing}
+                activeCaptionStyle={activeCaptionStyle}
+                setActiveCaptionStyle={setActiveCaptionStyle}
+                captionPosition={captionPosition}
+                setCaptionPosition={setCaptionPosition}
+                captionColor={captionColor}
+                setCaptionColor={setCaptionColor}
+                captionFont={captionFont}
+                setCaptionFont={setCaptionFont}
+                captionSize={captionSize}
+                setCaptionSize={setCaptionSize}
+                onAddSubtitleAtPlayhead={handleAddSubtitleAtPlayhead}
+                onRemoveSilence={handleRemoveSilence}
+              />
+            )}
+
+            {activeTab === 'media' && (
+              <MediaPanel
+                aspectRatio={aspectRatio}
+                currentTime={currentTime}
+                overlayImages={overlayImages}
+                selectedImageId={selectedImageId}
+                setSelectedImageId={setSelectedImageId}
+                onAddOverlayImage={handleAddOverlayImage}
+                onUpdateOverlayImage={handleUpdateOverlayImage}
+                onDeleteOverlayImage={handleDeleteOverlayImage}
+                onUploadClick={() => fileInputRef.current?.click()}
+              />
+            )}
+
+            {activeTab === 'audio' && (
+              <AudioPanel
+                onAddTTSVoiceover={handleAddTTSVoiceover}
+                backgroundTrack={backgroundTrack}
+                setBackgroundTrack={setBackgroundTrack}
+                bgMusicVolume={bgMusicVolume}
+                setBgMusicVolume={setBgMusicVolume}
+              />
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Control Bar right under canvas */}

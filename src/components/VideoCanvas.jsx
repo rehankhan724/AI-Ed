@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Upload, Sparkles, Move, Trash2, RotateCw, Monitor, Film } from 'lucide-react';
+import { Upload, Sparkles, Move, Trash2, RotateCw } from 'lucide-react';
 
 export default function VideoCanvas({
   videoSrc,
@@ -173,28 +173,7 @@ export default function VideoCanvas({
         justifyContent: 'center',
         transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)'
       }}>
-        {/* Top-Left Live Studio Monitor Badge */}
-        <div style={{
-          position: 'absolute',
-          top: '12px',
-          left: '12px',
-          backgroundColor: 'rgba(7, 10, 19, 0.75)',
-          backdropFilter: 'blur(10px)',
-          padding: '4px 10px',
-          borderRadius: '20px',
-          fontSize: '10px',
-          fontWeight: '800',
-          color: '#f8fafc',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px',
-          zIndex: 30,
-          pointerEvents: 'none'
-        }}>
-          <span className="live-pulse-dot" />
-          <span>LIVE PREVIEW • 1080P 60FPS</span>
-        </div>
+
 
         {videoSrc ? (
           <video
