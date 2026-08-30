@@ -83,8 +83,11 @@ const getDuration = filePath =>
  * Generates word-level timestamps across the total video duration
  */
 const buildWordTimings = (script, totalDuration) => {
-  if (!script || !script.trim()) return [];
-  const words = script.trim().split(/\s+/);
+  const textToUse = (script && script.trim())
+    ? script.trim()
+    : "THIS IS THE END OF THE LINE WATCH HOW KINETIC CAPTIONS POP UP DYNAMICALLY IN YOUR VIRAL REEL";
+  
+  const words = textToUse.split(/\s+/);
   const secPerWord = totalDuration / words.length;
 
   return words.map((word, i) => {
@@ -191,8 +194,9 @@ app.post('/api/magic/assemble', upload.array('files', 50), async (req, res) => {
           '-c:v', 'libx264',
           '-preset', 'fast',
           '-crf', '23',
+          '-c:a', 'aac',
+          '-b:a', '192k',
           '-pix_fmt', 'yuv420p',
-          '-an',
           '-movflags', '+faststart'
         ]);
       }

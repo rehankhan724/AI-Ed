@@ -72,7 +72,7 @@ export default function MagicPanel({ onMagicComplete }) {
   const [videoFiles, setVideoFiles] = useState([]);
   const [audioFile, setAudioFile] = useState(null);
   const [scriptFile, setScriptFile] = useState(null);
-  const [captionScript, setCaptionScript] = useState('');
+  const [captionScript, setCaptionScript] = useState('THIS IS THE END OF THE LINE WATCH HOW KINETIC CAPTIONS POP UP DYNAMICALLY IN YOUR VIRAL REEL');
   const [captionStyle, setCaptionStyle] = useState('drk-talks');
   const [isDragging, setIsDragging] = useState(false);
   const [status, setStatus] = useState('idle');
