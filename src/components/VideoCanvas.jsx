@@ -21,7 +21,9 @@ export default function VideoCanvas({
   videoRef,
   onUploadClick,
   onTranscribeClick,
-  isTranscribing
+  isTranscribing,
+  magicWordTimings = [],
+  magicCaptionStyle = 'drk-talks'
 }) {
   const [resizingImage, setResizingImage] = useState(null); // { id, corner, startX, initialScale }
 
@@ -486,23 +488,40 @@ export default function VideoCanvas({
           </div>
         )}
 
-        {/* Aspect Ratio Badge watermark at top right */}
+        {/* Aspect Ratio Badge */}
         <div style={{
-          position: 'absolute',
-          top: '12px',
-          right: '12px',
-          backgroundColor: 'rgba(8, 11, 20, 0.75)',
-          backdropFilter: 'blur(10px)',
-          padding: '4px 10px',
-          borderRadius: '7px',
-          fontSize: '10px',
-          fontWeight: '800',
-          color: '#94a3b8',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
-          pointerEvents: 'none'
+          position: 'absolute', top: '12px', right: '12px',
+          backgroundColor: 'rgba(8,11,20,0.75)', backdropFilter: 'blur(10px)',
+          padding: '4px 10px', borderRadius: '7px', fontSize: '10px',
+          fontWeight: '800', color: '#94a3b8',
+          border: '1px solid rgba(255,255,255,0.12)', pointerEvents: 'none'
         }}>
           {aspectRatio || '16:9'}
         </div>
+
+        {/* ── Magic Word-by-Word Caption Overlay ── */}
+        {magicWordTimings.length > 0 && (() => {
+          const activeWord = magicWordTimings.find(
+            w => currentTime >= w.start && currentTime < w.end
+          );
+          if (!activeWord) return null;
+          return (
+            <div style={{
+              position: 'absolute',
+              left: '50%', transform: 'translateX(-50%)',
+              bottom: '18%',
+              width: '90%', textAlign: 'center',
+              pointerEvents: 'none', zIndex: 20
+            }}>
+              <span
+                key={`${activeWord.word}-${activeWord.start}`}
+                className={`caption-style-${magicCaptionStyle}${activeWord.isKey ? ' magic-key' : ''}`}
+              >
+                {activeWord.word}
+              </span>
+            </div>
+          );
+        })()}
       </div>
     </div>
   );

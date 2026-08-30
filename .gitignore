@@ -31,3 +31,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Backend uploads & generated output files
+backend/uploads/
+backend/outputs/
+.env
+.env.local
+

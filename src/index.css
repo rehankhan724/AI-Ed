@@ -370,3 +370,203 @@ select:focus {
   cursor: ew-resize;
   box-shadow: 0 0 12px #ff4d6d;
 }
+
+/* ----------------------------------------------------
+   DRK TALKS & MAGIC WORD-BY-WORD CAPTION STYLES
+   ---------------------------------------------------- */
+
+@keyframes drkTalksPop {
+  0% {
+    transform: scale(0.3) translateY(12px) rotate(-3deg);
+    opacity: 0;
+    filter: blur(4px);
+  }
+  55% {
+    transform: scale(1.22) translateY(-4px) rotate(1deg);
+    opacity: 1;
+    filter: blur(0px);
+  }
+  100% {
+    transform: scale(1) translateY(0) rotate(0deg);
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+@keyframes drkKeyPunch {
+  0% {
+    transform: scale(0.4) rotate(-5deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.35) rotate(2deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* 0. DRK TALKS SIGNATURE STYLE (Exact match to @drk_talks reels) */
+.caption-style-drk-talks {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #ffffff;
+  font-size: 3rem;
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+  text-shadow:
+    -4px -4px 0 #000, 4px -4px 0 #000, -4px 4px 0 #000, 4px 4px 0 #000,
+    -2px 0 0 #000, 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000,
+    0 10px 30px rgba(0, 0, 0, 0.95);
+  animation: drkTalksPop 0.16s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  display: inline-block;
+  padding: 8px 20px;
+  background: rgba(0, 0, 0, 0.82);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(8px);
+}
+
+/* DRK Talks Highlighted Key Word (Solid Bright Yellow Box with Black Bold Text) */
+.caption-style-drk-talks.magic-key {
+  color: #000000 !important;
+  font-size: 3.4rem !important;
+  background: #ffe500 !important;
+  text-shadow: none !important;
+  border: 2px solid #ffffff !important;
+  box-shadow: 0 0 35px rgba(255, 229, 0, 0.9), 0 10px 30px rgba(0, 0, 0, 0.8) !important;
+  animation: drkKeyPunch 0.18s cubic-bezier(0.175, 0.885, 0.32, 1.35) forwards !important;
+  padding: 6px 22px !important;
+  border-radius: 12px !important;
+}
+
+@keyframes magicWordPop {
+  0%   { transform: scale(0.35) translateY(10px); opacity: 0; }
+  60%  { transform: scale(1.15) translateY(-4px); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+@keyframes magicNeonPulse {
+  0%   { opacity: 0; letter-spacing: 8px; }
+  100% { opacity: 1; letter-spacing: 2px; }
+}
+
+@keyframes magicBoldSlam {
+  0%   { transform: scaleY(2.5) scaleX(0.6); opacity: 0; }
+  50%  { transform: scaleY(0.9) scaleX(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes magicCleanFade {
+  0%   { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* 1. Word Pop — one word bounces in */
+.caption-style-magic-pop {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #ffffff;
+  font-size: 2.8rem;
+  letter-spacing: 1px;
+  text-shadow:
+    -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000,
+    0 6px 30px rgba(0,0,0,0.95);
+  animation: magicWordPop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  display: inline-block;
+  padding: 6px 18px;
+  background: rgba(0,0,0,0.65);
+  border-radius: 10px;
+  backdrop-filter: blur(4px);
+}
+
+.caption-style-magic-pop.magic-key {
+  color: #facc15;
+  font-size: 3.4rem;
+  text-shadow:
+    0 0 30px rgba(250,204,21,0.9),
+    -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000;
+  background: rgba(250,204,21,0.12);
+  border: 1px solid rgba(250,204,21,0.3);
+}
+
+/* 2. Neon Glow */
+.caption-style-magic-neon {
+  font-family: 'Bebas Neue', sans-serif;
+  text-transform: uppercase;
+  color: #00d294;
+  font-size: 3.2rem;
+  letter-spacing: 2px;
+  text-shadow:
+    0 0 10px #00d294,
+    0 0 25px #00d294,
+    0 0 50px #38bdf8;
+  animation: magicNeonPulse 0.18s ease forwards;
+  display: inline-block;
+}
+
+.caption-style-magic-neon.magic-key {
+  color: #f472b6;
+  text-shadow:
+    0 0 10px #f472b6,
+    0 0 28px #f472b6,
+    0 0 55px #ec4899;
+}
+
+/* 3. Hormozi Bold */
+.caption-style-magic-bold {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #ffffff;
+  font-size: 2.6rem;
+  text-shadow:
+    -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+  animation: magicBoldSlam 0.15s ease forwards;
+  display: inline-block;
+  transform-origin: center bottom;
+}
+
+.caption-style-magic-bold.magic-key {
+  color: #facc15;
+  font-size: 3.2rem;
+  transform: scale(1.1);
+  text-shadow:
+    0 0 20px rgba(250,204,21,0.8),
+    -2px -2px 0 #000, 2px -2px 0 #000;
+}
+
+/* 4. Clean White */
+.caption-style-magic-clean {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  color: #ffffff;
+  font-size: 2rem;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(12px);
+  padding: 8px 22px;
+  border-radius: 40px;
+  border: 1px solid rgba(255,255,255,0.2);
+  animation: magicCleanFade 0.15s ease forwards;
+  display: inline-block;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+}
+
+.caption-style-magic-clean.magic-key {
+  background: rgba(99,102,241,0.35);
+  border-color: rgba(139,92,246,0.6);
+  color: #e0e7ff;
+  box-shadow: 0 0 20px rgba(139,92,246,0.4);
+}
+
+/* Spinner utility */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+

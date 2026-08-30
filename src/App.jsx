@@ -8,6 +8,7 @@ import SubtitleEditorPanel from './components/SubtitleEditorPanel';
 import AudioPanel from './components/AudioPanel';
 import MediaPanel from './components/MediaPanel';
 import RenderModal from './components/RenderModal';
+import MagicPanel from './components/MagicPanel';
 import { transcribeVideoAudio, DEMO_SAMPLE_SUBTITLES } from './services/transcriptionService';
 
 export default function App() {
@@ -38,6 +39,8 @@ export default function App() {
   const [captionSize, setCaptionSize] = useState(26);
 
   const [activeTab, setActiveTab] = useState('subtitles');
+  const [magicWordTimings, setMagicWordTimings] = useState([]);
+  const [magicCaptionStyle, setMagicCaptionStyle] = useState('drk-talks');
   const [aspectRatio, setAspectRatio] = useState('16:9');
   const [zoomLevel, setZoomLevel] = useState(100);
   const [isRenderModalOpen, setIsRenderModalOpen] = useState(false);
@@ -468,6 +471,8 @@ export default function App() {
           onUploadClick={() => fileInputRef.current?.click()}
           onTranscribeClick={() => handleTranscribeAudio()}
           isTranscribing={isTranscribing}
+          magicWordTimings={magicWordTimings}
+          magicCaptionStyle={magicCaptionStyle}
         />
 
         {/* Right Side Studio Panel (Navigation Tabs + Active Panel) */}
@@ -538,6 +543,19 @@ export default function App() {
                 setBackgroundTrack={setBackgroundTrack}
                 bgMusicVolume={bgMusicVolume}
                 setBgMusicVolume={setBgMusicVolume}
+              />
+            )}
+
+            {activeTab === 'magic' && (
+              <MagicPanel
+                onMagicComplete={(result) => {
+                  setVideoSrc(result.outputUrl);
+                  setDuration(result.totalDuration);
+                  setMagicWordTimings(result.wordTimings || []);
+                  setMagicCaptionStyle(result.captionStyle || 'magic-pop');
+                  setCurrentTime(0);
+                  setIsPlaying(false);
+                }}
               />
             )}
           </div>
