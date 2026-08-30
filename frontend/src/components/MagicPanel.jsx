@@ -213,23 +213,7 @@ export default function MagicPanel({ onMagicComplete }) {
           </div>
         )}
 
-        {/* Folder structure guide */}
-        {!hasFolder && status === 'idle' && (
-          <div style={{ marginBottom: '14px', padding: '12px', borderRadius: '8px', background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.2)' }}>
-            <div style={{ fontSize: '10px', fontWeight: '800', color: '#a78bfa', marginBottom: '8px', letterSpacing: '0.5px' }}>📁 FOLDER STRUCTURE</div>
-            {[
-              { icon: '🎬', text: '01_clip.mp4  ← sorted by name' },
-              { icon: '🎬', text: '02_clip.mp4' },
-              { icon: '🎬', text: '03_clip.mp4  ← as many as you want' },
-              { icon: '🎵', text: 'voiceover.mp3  ← any audio file' },
-              { icon: '📝', text: 'script.txt  ← optional captions' },
-            ].map((r, i) => (
-              <div key={i} style={{ display: 'flex', gap: '7px', fontSize: '10.5px', color: '#94a3b8', padding: '2px 0', fontFamily: 'monospace' }}>
-                <span>{r.icon}</span><span>{r.text}</span>
-              </div>
-            ))}
-          </div>
-        )}
+
 
         {status === 'done' && result ? (
           /* Done */

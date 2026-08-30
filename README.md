@@ -1,10 +1,39 @@
 # 🪄 Magic Pro Studio — Automated NLE & Video Engine
 
-A high-performance, studio-grade video production environment built with **React 18**, **Vite**, **Tailwind/Vanilla CSS Tokens**, and a server-side **Node.js + FFmpeg** assembly pipeline. Designed for 1-click automated short-form reel creation, kinetic word-by-word subtitles (`@drk_talks` style), multi-track timeline editing, and real-time canvas rendering.
+A high-performance, studio-grade video production environment built as a clean **Full-Stack Monorepo** with **Frontend (React 18 + Vite)** and **Backend (Node.js + Express + FFmpeg)**.
 
 ---
 
-## 🌟 Architecture & Core Features
+## 📁 Repository Architecture
+
+```text
+AI-ED/
+├── 📁 frontend/                       # React 18 + Vite Web Studio Application
+│   ├── 📁 src/                        # React Components, State & CSS Tokens
+│   │   ├── App.jsx                    # Studio Orchestrator & State Container
+│   │   ├── index.css                  # Design System & Kinetic Subtitle Animation Keyframes
+│   │   ├── main.jsx                   # Application Entry
+│   │   ├── 📁 components/             # Studio UI Modules (MagicPanel, VideoCanvas, Timeline, etc.)
+│   │   └── 📁 services/               # Stock Media & Transcription Services
+│   ├── 📁 public/                     # Static Assets
+│   ├── index.html                     # HTML Document Root
+│   ├── vite.config.js                 # Vite Bundler Config
+│   └── package.json                   # Frontend Dependencies
+│
+├── 📁 backend/                        # Node.js + Express + FFmpeg Server
+│   ├── server.js                      # Concat assembly API, duration probe & static host
+│   ├── package.json                   # Backend Service Manifest
+│   ├── uploads/                       # Session-isolated raw uploads (git-ignored)
+│   └── outputs/                       # Assembled production video outputs (git-ignored)
+│
+├── package.json                       # Monorepo Workspace Scripts
+├── README.md                          # Project Documentation
+└── .gitignore                         # Repository Ignore Configuration
+```
+
+---
+
+## 🌟 Core Features
 
 - **🪄 Magic Folder-to-Reel Automator**: Drag & drop project folders containing video clips (`01_...mp4`), audio (`voiceover.mp3`), and scripts (`script.txt`) for instant 1-click reel generation.
 - **🔥 DRK Talks Kinetic Subtitles**: Frame-accurate word-by-word caption engine featuring solid yellow key-word highlight boxes, 4-directional text outlines, and elastic zoom-punch scale animations.
@@ -15,64 +44,23 @@ A high-performance, studio-grade video production environment built with **React
 
 ---
 
-## 📁 Repository Architecture
-
-```text
-AI-ED/
-├── 📁 backend/                        # Node.js + Express + FFmpeg Backend
-│   ├── server.js                      # Concat assembly API, duration probe & static host
-│   ├── package.json                   # Backend service manifests
-│   ├── uploads/                       # Session-isolated raw uploads (git-ignored)
-│   └── outputs/                       # Assembled production video outputs (git-ignored)
-│
-├── 📁 src/                            # Frontend (React 18 + Vite)
-│   ├── App.jsx                        # Studio Layout Orchestrator & State Container
-│   ├── index.css                      # Design Tokens & Kinetic Subtitle Animation Keyframes
-│   ├── main.jsx                       # React Application Entry
-│   │
-│   ├── 📁 components/                 # Isolated Studio UI Modules
-│   │   ├── MagicPanel.jsx             # 🪄 1-Click Folder Automation Panel
-│   │   ├── VideoCanvas.jsx            # Live Monitor & Frame-Synced Captions Overlay
-│   │   ├── Timeline.jsx               # Multi-Track Timeline with Integrated Waveforms
-│   │   ├── SubtitleEditorPanel.jsx    # Subtitle Segment Editor & Typography Controls
-│   │   ├── AudioPanel.jsx             # AI TTS Voiceover & Ambient BG Music Ducks
-│   │   ├── MediaPanel.jsx             # Asset Library & Stock Media Explorer
-│   │   ├── PlaybackControls.jsx       # Transport Controls, Scrubbing & Zoom
-│   │   ├── Sidebar.jsx                # Studio Header Tab Navigation
-│   │   ├── Navbar.jsx                 # Top Bar with Preset & Resolution Selectors
-│   │   └── RenderModal.jsx            # Video Export Progress Modal
-│   │
-│   └── 📁 services/                   # Core Domain Logic Services
-│       ├── stockMediaService.js       # Curated Media Asset Provider
-│       └── transcriptionService.js    # Speech Recognition & Caption Synchronization
-│
-├── 📁 public/                         # Public Static Assets
-├── index.html                         # HTML Root Entry & Google Font Declarations
-├── vite.config.js                     # Vite Bundler Configuration
-└── package.json                       # Frontend Manifest
-```
-
----
-
 ## 🚀 Getting Started
 
-### 1. Frontend Setup
+### 1. Start Frontend (React Studio)
 ```bash
-# Install frontend dependencies
+cd frontend
 npm install
-
-# Start Vite dev server
 npm run dev
 ```
-Frontend running at: `http://localhost:5173`
+Open: `http://localhost:5173`
 
-### 2. Backend Setup
+### 2. Start Backend (Assembly Server)
 ```bash
 cd backend
 npm install
 node server.js
 ```
-Backend API running at: `http://localhost:3001`
+API Running at: `http://localhost:3001`
 
 ---
 

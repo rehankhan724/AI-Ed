@@ -1,27 +1,26 @@
-# Logs
+# Logs & Debugging
 logs
 *.log
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# Node Modules & Distribution Builds
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+dist-ssr/
+
+# Environment Variables
+.env
+.env.local
 *.local
 
-# Heavy Media files
-*.mp4
-*.mov
-*.avi
-*.mkv
-*.webm
-*.mp3
-*.wav
+# Backend Temporary Files & Outputs
+backend/uploads/
+backend/outputs/
 
-# Editor directories and files
+# Editor & System Files
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -32,9 +31,11 @@ dist-ssr
 *.sln
 *.sw?
 
-# Backend uploads & generated output files
-backend/uploads/
-backend/outputs/
-.env
-.env.local
-
+# Heavy Media Files
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.mp3
+*.wav

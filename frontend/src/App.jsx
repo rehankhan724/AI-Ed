@@ -280,7 +280,6 @@ export default function App() {
     if (file) {
       const fileUrl = URL.createObjectURL(file);
       setVideoSrc(fileUrl);
-      setCurrentFileName(file.name);
       setIsPlaying(false);
       setCurrentTime(0);
       setSubtitles([]);
@@ -294,10 +293,10 @@ export default function App() {
   };
 
   // Convert Speech to Subtitles
-  const handleTranscribeAudio = async (overrideUrl = null, name = null) => {
+  const handleTranscribeAudio = async (overrideUrl = null, name = 'uploaded_video.mp4') => {
     setIsTranscribing(true);
     try {
-      const fileNameToUse = name || currentFileName;
+      const fileNameToUse = name || 'uploaded_video.mp4';
       const generated = await transcribeVideoAudio(videoRef.current, duration, fileNameToUse);
       setSubtitles(generated);
       if (generated.length > 0) {

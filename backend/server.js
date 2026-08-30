@@ -237,12 +237,26 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal Server Error', message: err.message });
 });
 
-// ── Server Process Initialization ─────────────────────────────
-app.listen(PORT, () => {
-  console.log(`\n==================================================`);
-  console.log(`🪄 Magic Pro Backend Engine Ready`);
-  console.log(`🚀 API Base URL : http://localhost:${PORT}`);
-  console.log(`📁 Uploads Dir  : ${uploadsDir}`);
-  console.log(`🎬 Outputs Dir  : ${outputsDir}`);
-  console.log(`==================================================\n`);
-});
+// ── Server Process Initialization with Auto-Port Retry ─────────────────
+function startServer(portToUse) {
+  const server = app.listen(portToUse, () => {
+    console.log(`\n==================================================`);
+    console.log(`🪄 Magic Pro Backend Engine Ready`);
+    console.log(`🚀 API Base URL : http://localhost:${portToUse}`);
+    console.log(`📁 Uploads Dir  : ${uploadsDir}`);
+    console.log(`🎬 Outputs Dir  : ${outputsDir}`);
+    console.log(`==================================================\n`);
+  });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.warn(`\n⚠️  Port ${portToUse} is busy. Retrying on port ${portToUse + 1}...`);
+      startServer(portToUse + 1);
+    } else {
+      console.error('Server error:', err);
+    }
+  });
+}
+
+startServer(Number(PORT));
+
